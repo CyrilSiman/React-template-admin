@@ -1,0 +1,6 @@
+mutation LoginOperator($login: String!, $password : String!) {
+    operatorLogin(login: $login, password: $password) {
+        expires_in
+        access_token
+    }
+}

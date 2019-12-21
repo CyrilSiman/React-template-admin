@@ -1,0 +1,8 @@
+
+query localState @client {
+    showLeftMenu @client
+}
+
+query connected @client {
+    isLoggedIn @client
+}

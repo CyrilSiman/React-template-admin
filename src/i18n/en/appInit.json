@@ -1,0 +1,11 @@
+{
+  "message" : "Your ROOT user isn't configured yet, you the secret log in backend console.",
+  "button" : {
+    "login" : "Create"
+  },
+  "field" : {
+    "email" : "Email",
+    "password" : "Password",
+    "secret" : "Root Secret"
+  }
+}

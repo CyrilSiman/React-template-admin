@@ -1,0 +1,10 @@
+{
+  "lostPassword" : "Reset your password",
+  "button" : {
+    "login" : "Login"
+  },
+  "field" : {
+    "email" : "Email",
+    "password" : "Password"
+  }
+}
