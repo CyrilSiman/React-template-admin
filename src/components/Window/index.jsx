@@ -1,11 +1,11 @@
 import React from 'react'
-import Paper from '@material-ui/core/Paper/Paper'
+import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography/Typography'
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from './styles'
 import { useTranslation } from 'react-i18next'
 
-const WindowForm = (props) => {
+const Window = (props) => {
     const { t } = useTranslation('global')
     let { classes } = props
 
@@ -26,4 +26,4 @@ const WindowForm = (props) => {
 
 }
 
-export default withStyles(styles)(WindowForm)
+export default withStyles(styles)(Window)

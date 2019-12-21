@@ -1,51 +1,55 @@
 import React from 'react'
-import { Link, useHistory } from 'react-router-dom'
-import { Field, Form } from 'react-final-form'
+import { useHistory } from 'react-router-dom'
+import { useSnackbar } from 'notistack'
+import { useMutation } from '@apollo/react-hooks'
 import { useTranslation } from 'react-i18next'
 
-import { useApolloClient, useMutation } from '@apollo/react-hooks'
-
+import { Field, Form } from 'react-final-form'
 import withStyles from '@material-ui/core/styles/withStyles'
 
+import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
 import TextField from 'ROOT/components/InputForm/TextField'
-import Button from '@material-ui/core/Button/Button'
-import { LockQuestion } from 'mdi-material-ui'
 
 import WindowForm from 'ROOT/components/Window'
-import SnackBar from 'ROOT/components/SnackBar'
+
+import {createRootUserMutation} from 'ROOT/services/graphql/appConfig.graphql'
 
 import styles from './styles'
-import { login as loginQuery, me as meQuery } from 'ROOT/services/graphql/auth.graphql'
 
-const LoginScene = (props) => {
+const AppInitScene = (props) => {
 
     let { classes } = props
     let history = useHistory()
-    const { t } = useTranslation('login')
-    const client = useApolloClient()
+    const { enqueueSnackbar } = useSnackbar()
+    const { t } = useTranslation('appInit')
 
-    const [loginMutation, { loading: mutationLoading, error : errorMutation }] = useMutation(loginQuery, {
+    const [appInitMutation, { loading: mutationLoading }] = useMutation(createRootUserMutation, {
         onCompleted: (data) => {
-            //client.writeData({ data: { connected: true } })
-            client.writeData({ data: { isLoggedIn: true } })
-            //const access_token = data.login
-            //localStorage.setItem(constants.AUTH_TOKEN, access_token)
-            history.push('/')
+            if(data.createRootUser){
+                history.push('/')
+            } else {
+                enqueueSnackbar(t('creationFailed'),{variant:'error'})
+            }
         },
         onError: (error) => {
-            //Necessary to fix Appolo Client error
+            enqueueSnackbar(t('creationFailed'),{variant:'error'})
         }
     })
 
     const submit = (values) => {
-        loginMutation({ variables: { email: values.email, password: values.password } })
+        appInitMutation({ variables: { secret:values.secret, email: values.email, password: values.password } })
     }
 
     return <WindowForm>
+        <Typography style={{margin:20}}>{t('message')}</Typography>
         <Form onSubmit={(values) => submit(values)}
-              initialValues={{ email: '', password: '' }}
+              initialValues={{ secret:'', email: '', password: '' }}
               validate={values => {
                   const errors = {}
+                  if (!values.secret) {
+                      errors.secret = 'Required'
+                  }
                   if (!values.email) {
                       errors.email = 'Required'
                   }
@@ -56,7 +60,8 @@ const LoginScene = (props) => {
               }}
               render={({ handleSubmit }) => (
                   <form onSubmit={handleSubmit} className={classes.form} autoComplete='off'>
-                      {errorMutation && <SnackBar variant='error' message='aie aie' open={true} />}
+                      <Field name='secret' component={TextField} type='password' className=''
+                             label={t('field.secret')} autoComplete='secret' fullWidth />
                       <Field name='email' component={TextField} type='text' className=''
                              label={t('field.email')} autoComplete='email' fullWidth />
                       <Field name='password' component={TextField} type='password'
@@ -69,15 +74,11 @@ const LoginScene = (props) => {
                       }
                       {!mutationLoading &&
                       <Button fullWidth variant='contained' color='primary' type='submit'
-                              className={classes.submit}>{t('button.login')}</Button>
+                              className={classes.submit}>{t('button.configure')}</Button>
                       }
-                      <Button size='small' className={classes.lostPassword} component={Link} to='/lostPassword'>
-                          <LockQuestion className={classes.leftIcon} />
-                          {t('lostPassword')}
-                      </Button>
                   </form>
               )} />
     </WindowForm>
 }
 
-export default withStyles(styles)(LoginScene)
+export default withStyles(styles)(AppInitScene)

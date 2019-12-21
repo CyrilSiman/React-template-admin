@@ -1,10 +1,6 @@
 {
-  "lostPassword" : "Reset your password",
-  "button" : {
-    "login" : "Login"
-  },
-  "field" : {
-    "email" : "Email",
-    "password" : "Password"
-  }
+  "profile" : "Profile",
+  "logout" : "Logout",
+  "help" : "Help",
+  "alerts" : "Alerts - notifications"
 }

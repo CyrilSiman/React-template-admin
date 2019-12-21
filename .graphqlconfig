@@ -1,10 +1,10 @@
 {
-  "name": "Untitled GraphQL Schema",
+  "name": "My App GraphQL",
   "schemaPath": "schema.graphql",
   "extensions": {
     "endpoints": {
-      "Jobmaker": {
-        "url": "https://api.jobmaker.lc/graphql",
+      "Backend": {
+        "url": "http://localhost:5053/graphql",
         "headers": {
           "user-agent": "JS GraphQL"
         },

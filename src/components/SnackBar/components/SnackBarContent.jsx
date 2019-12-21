@@ -1,5 +1,5 @@
-import SnackbarContent from '@material-ui/core/SnackbarContent/SnackbarContent'
-import IconButton from '@material-ui/core/IconButton/IconButton'
+import SnackbarContent from '@material-ui/core/SnackbarContent'
+import IconButton from '@material-ui/core/IconButton'
 import PropTypes from 'prop-types'
 import {withStyles} from '@material-ui/core'
 import React from 'react'

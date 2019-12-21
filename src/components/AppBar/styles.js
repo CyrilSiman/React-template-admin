@@ -19,8 +19,13 @@ const styles = theme => ({
     },
     header : {
         zIndex: theme.zIndex.drawer + 1,
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.common.white,
+    },
+    headerLogo : {
+        minHeight: '64px',
+        width:theme.drawerWidth,
+        margin:0,
+        backgroundColor: '#1769aa',//theme.MuiDrawer.
+        zIndex: theme.zIndex.drawer + 1,
     },
 })
 

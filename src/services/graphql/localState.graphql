@@ -1,11 +1,8 @@
-mutation login($email: String!, $password : String!) {
-    login(email: $email, password: $password)
+
+query localState @client {
+    showLeftMenu @client
 }
 
-query me {
-    me {
-        email,
-        lastName,
-        firstName,
-    }
+query connected @client {
+    isLoggedIn @client
 }

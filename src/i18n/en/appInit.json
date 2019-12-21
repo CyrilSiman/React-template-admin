@@ -1,7 +1,8 @@
 {
-  "message" : "Your ROOT user isn't configured yet, you the secret log in backend console.",
+  "message" : "Your ROOT user isn't configured yet, use secret logs in your backend console.",
+  "creationFailed" : "OUPS : Your secret isn't valid",
   "button" : {
-    "login" : "Create"
+    "configure" : "Configure"
   },
   "field" : {
     "email" : "Email",

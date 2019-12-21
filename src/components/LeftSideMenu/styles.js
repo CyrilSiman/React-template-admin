@@ -1,26 +1,23 @@
 
-export const drawerWidth = 256
-
 const styles = theme => ({
     root: {
         display: 'flex',
         minHeight: '100vh',
     },
     drawer: {
-        [theme.breakpoints.up('sm')]: {
-            width: drawerWidth,
+        [theme.breakpoints.up('lg')]: {
+            width: theme.drawerWidth,
             flexShrink: 0,
         },
     },
     appContent: {
         flex: 1,
+        backgroundColor : theme.mainBackgroundColor,
         display: 'flex',
         flexDirection: 'column',
-    },
-    mainContent: {
-        flex: 1,
-        padding: '48px 36px 0',
-        background: '#eaeff1',
+        [theme.breakpoints.up('lg')]: {
+            marginLeft: theme.drawerWidth,
+        },
     },
 })
 

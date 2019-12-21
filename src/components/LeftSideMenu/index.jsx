@@ -1,53 +1,76 @@
-import React from 'react'
+import React, { Fragment } from 'react'
+import { useApolloClient, useQuery } from '@apollo/react-hooks'
+import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router-dom'
+import useTheme from '@material-ui/core/styles/useTheme'
+
 import PropTypes from 'prop-types'
-import {withStyles} from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
+
 import Hidden from '@material-ui/core/Hidden'
-import Header from './components/Header'
 import Navigator from './components/Navigator'
-import styles, {drawerWidth} from './styles'
 
-class LeftSideMenu extends React.Component {
+import { localState } from 'ROOT/services/graphql/localState.graphql'
 
-    state = {
-        mobileOpen: false
+import styles, { drawerWidth } from './styles'
+
+const LeftSideMenu = (props) => {
+
+    const client = useApolloClient()
+    let history = useHistory()
+    let theme = useTheme()
+    const { t } = useTranslation('global')
+
+    const { loading, data } = useQuery(localState)
+
+    const { classes, navigation } = props
+
+    const toggleLeftMenu = () => {
+        client.writeData({ data: { showLeftMenu: false } })
     }
 
-    handleDrawerToggle = () => {
-        this.setState(state => ({mobileOpen: !state.mobileOpen}))
+    const navigateToLink = (path) => {
+        toggleLeftMenu()
+        history.push(path)
     }
 
-    render() {
-        const {classes,navigation} = this.props
-
-        return (
-            <div className={classes.root}>
+    return (
+        <Fragment>
+            <div>
                 <nav className={classes.drawer}>
-                    <Hidden smUp implementation="js">
+                    <Hidden smUp implementation="css">
                         <Navigator
+                            PaperProps={{ style: { width: theme.drawerWidth } }}
+                            variant='temporary'
+                            ModalProps={{
+                                keepMounted: true, // Better open performance on mobile.
+                            }}
                             navigation={navigation}
-                            PaperProps={{ style: { width: drawerWidth } }}
-                            variant="temporary"
-                            open={this.state.mobileOpen}
-                            onClose={this.handleDrawerToggle}
+                            onClose={toggleLeftMenu}
+                            navigateToLink={navigateToLink}
+                            open={!loading && data && data.showLeftMenu}
                         />
                     </Hidden>
-                    <Hidden xsDown implementation="css">
-                        <Navigator PaperProps={{ style: { width: drawerWidth } }} navigation={navigation} />
+                    <Hidden mdDown implementation="css">
+                        <Navigator
+                            PaperProps={{ style: { width: theme.drawerWidth } }}
+                            variant="permanent"
+                            navigation={navigation}
+                            navigateToLink={navigateToLink}
+                            open
+                        />
                     </Hidden>
                 </nav>
                 <div className={classes.appContent}>
-                    <Header onDrawerToggle={this.handleDrawerToggle} className={classes.header}/>
-                    {this.props.children}
+                    {props.children}
                 </div>
             </div>
-        )
-    }
+        </Fragment>
+    )
 }
 
 LeftSideMenu.propTypes = {
-    classes: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired,
-    navigation : PropTypes.array.isRequired
+    navigation: PropTypes.array.isRequired
 }
 
-export default withStyles(styles, {withTheme: true})(LeftSideMenu)
+export default withStyles(styles, { withTheme: true })(LeftSideMenu)

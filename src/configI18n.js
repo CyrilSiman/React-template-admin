@@ -2,10 +2,9 @@ import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
 import LanguageDetector from 'i18next-browser-languagedetector'
-var resBundle = import('i18next-resource-store-loader!./i18n/index.js')
+// eslint-disable-next-line import/no-webpack-loader-syntax
+var resBundle =  require('i18next-resource-store-loader!./i18n/index.js')
 
-console.log('ici')
-console.log(resBundle)
 // not like to use this?
 // have a look at the Quick start guide 
 // for passing in lng and translations on init

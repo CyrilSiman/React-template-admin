@@ -1,10 +1,11 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import PropTypes from 'prop-types'
-import { useHistory, withRouter } from 'react-router-dom'
-import { ApolloConsumer, Query } from 'react-apollo'
-import { Account } from 'mdi-material-ui'
-import AppBar from '@material-ui/core/AppBar'
+import { withRouter, useHistory } from 'react-router-dom'
+import { useApolloClient, useQuery } from 'react-apollo'
+import {default as MUIAppBar} from '@material-ui/core/AppBar'
+
 import Avatar from '@material-ui/core/Avatar'
+import Tooltip from '@material-ui/core/Tooltip'
 import Grid from '@material-ui/core/Grid'
 import Hidden from '@material-ui/core/Hidden'
 import IconButton from '@material-ui/core/IconButton'
@@ -14,143 +15,136 @@ import Menu from '@material-ui/core/Menu/Menu'
 import MenuItem from '@material-ui/core/MenuItem/MenuItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
+
+import PermIdentity from '@material-ui/icons/PermIdentity'
+import HelpIcon from '@material-ui/icons/Help'
+import NotificationsIcon from '@material-ui/icons/Notifications'
 import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew'
+
 import { withStyles } from '@material-ui/core/styles'
 import styles from './styles'
 import { useTranslation } from 'react-i18next'
-//import {meQuery} from 'ROOT/services/graphql/operator.graphql'
+import { logoutQuery, meQuery } from 'ROOT/services/graphql/auth.graphql'
+import { useMutation } from '@apollo/react-hooks'
 
-const Header = (props) => {
+const AppBar = (props) => {
 
-    const anchorEl = useRef()
-    let history = useHistory()
-    const { t } = useTranslation('global')
-    const { classes, onDrawerToggle } = props
+    const { classes } = props
+    const { t } = useTranslation('appBar')
+    const history = useHistory()
+    const client = useApolloClient()
 
-    const _logout = (client) => {
-        localStorage.clear()
-        client.writeData({ data: { isLoggedIn: false } })
-        client.clearStore()
-        history.push('/')
-    }
-
-    const handleMenu = event => {
-        this.setState({ anchorEl: event.currentTarget })
-    }
-    const handleClose = () => {
-        this.setState({ anchorEl: null })
-    }
-
-    const twoLetterFromName = (name) => {
-        const tab = name.split(' ')
-        if (tab.length === 2) {
-            return tab[0].charAt(0) + tab[1].charAt(0)
-        } else if (tab.length === 1 && tab[0].length > 2) {
-            return tab[0].charAt(0) + tab[0].charAt(1)
-        } else {
-
+    const [logoutMutation] = useMutation(logoutQuery, {
+        onCompleted: async (data) => {
+            await client.resetStore()
+            //client.writeData({ data: { isLoggedIn: false } })
+            //history.push('/')
+        },
+        onError: async (error) => {
+            await client.resetStore()
+            //client.writeData({ data: { isLoggedIn: false } })
+            //history.push('/')
         }
+    })
+
+    const { loading : loadingMe, data : dataMe } = useQuery(meQuery,{
+        onError : () => {
+            logoutMutation()
+        }
+    })
+
+    const [menuOpen, setMenuOpen] = useState(false)
+    const anchorEl = useRef(null)
+
+    const toggleLeftMenu = () => {
+        client.writeData({ data: { showLeftMenu : true }})
     }
 
-    const open = Boolean(anchorEl)
+    const twoLetterFromName = (lastName,firstName) => {
+        let initial = ''
+        if(lastName) {
+            initial += lastName[0]
+        }
+        if(firstName) {
+            initial += firstName[0]
+        }
+        return initial
+    }
 
     return (
-        <React.Fragment>
-            <AppBar color="primary" position="sticky" elevation={1} className={classes.header}>
-                <Toolbar>
-                    <Grid container spacing={8} alignItems="center">
-                        <Hidden lgUp>
-                            <Grid item>
-                                <IconButton
-                                    color="inherit"
-                                    aria-label="Open drawer"
-                                    onClick={onDrawerToggle}
-                                    className={classes.menuButton}
-                                >
-                                    <MenuIcon />
-                                </IconButton>
-                            </Grid>
-                        </Hidden>
+        <MUIAppBar color="primary" position="sticky"  elevation={4} className={classes.header}>
+            <Toolbar >
+                <Grid container spacing={1} alignItems="center">
+                    <Hidden lgUp>
                         <Grid item xs>
-                            <img src='/img/logoApp.svg' alt={t('appName')} width={150} />
-                        </Grid>
-                        {/*
-                        <Grid item>
-                            <Tooltip title="Alerts • No alters">
-                                <IconButton color="inherit">
-                                    <NotificationsIcon />
-                                </IconButton>
-                            </Tooltip>
-                        </Grid>
-                        <Grid item>
-                            <Tooltip title="Help">
-                                <IconButton color="inherit">
-                                    <HelpIcon />
-                                </IconButton>
-                            </Tooltip>
-                        </Grid>*/}
-                        <Grid item>
-                            <IconButton color="inherit" className={classes.iconButtonAvatar} onClick={this.handleMenu}>
-                                {/*
-                                <Query query={meQuery}>
-                                    {({loading, data, error}) => {
-                                            return <Avatar className={classes.avatar} >
-                                                <Account/>
-                                                </Avatar>
-                                        }
-                                    }
-                                </Query>*/}
+                            <IconButton
+                                color="inherit"
+                                aria-label="Open drawer"
+                                onClick={toggleLeftMenu}
+                                className={classes.menuButton}
+                            >
+                                <MenuIcon />
                             </IconButton>
                         </Grid>
+                    </Hidden>
+                    <Grid item xs>
                     </Grid>
-                    <ApolloConsumer>
-                        {client => (
-                            <Menu
-                                id='menu-appbar'
-                                anchorEl={anchorEl}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                open={open}
-                                onClose={this.handleClose}
-                            >
-                                {/*
-                                <MenuItem onClick={this.handleClose}>
-                                    <ListItemIcon className={classes.icon}>
-                                        <PermIdentity/>
-                                    </ListItemIcon>
-                                    <ListItemText classes={{primary: classes.primary}} inset primary="Profile"/>
-                                </MenuItem>
-                                */}
-                                <MenuItem onClick={() => {
-                                    _logout(client)
-                                }}>
-                                    <ListItemIcon className={classes.icon}>
-                                        <PowerSettingsNew />
-                                    </ListItemIcon>
-                                    <ListItemText classes={{ primary: classes.primary }} inset primary="Logout" />
-                                </MenuItem>
-                            </Menu>
-                        )}
-                    </ApolloConsumer>
-
-                </Toolbar>
-            </AppBar>
-            <div className={classes.appContent}>
-                {this.props.children}
-            </div>
-        </React.Fragment>
+                    <Grid item>
+                        <Tooltip title={t('alerts')}>
+                            <IconButton color="inherit">
+                                <NotificationsIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </Grid>
+                    <Grid item>
+                        <Tooltip title={t('help')}>
+                            <IconButton color="inherit">
+                                <HelpIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </Grid>
+                    <Grid item>
+                        <IconButton ref={anchorEl} color="inherit" className={classes.iconButtonAvatar} onClick={() => setMenuOpen(true)}>
+                            <Avatar className={classes.avatar} >
+                                {!loadingMe && dataMe && twoLetterFromName(dataMe.me.firstName,dataMe.me.lastName,)}
+                            </Avatar>
+                        </IconButton>
+                    </Grid>
+                </Grid>
+                <Menu
+                    id='menu-appbar'
+                    anchorEl={anchorEl.current}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    open={menuOpen}
+                    onClose={() => setMenuOpen(false)}
+                >
+                    <MenuItem onClick={() => setMenuOpen(false)}>
+                        <ListItemIcon className={classes.icon}>
+                            <PermIdentity/>
+                        </ListItemIcon>
+                        <ListItemText classes={{primary: classes.primary}} inset primary={t('profile')}/>
+                    </MenuItem>
+                    <MenuItem onClick={logoutMutation}>
+                        <ListItemIcon className={classes.icon}>
+                            <PowerSettingsNew />
+                        </ListItemIcon>
+                        <ListItemText classes={{ primary: classes.primary }} inset primary={t('logout')} />
+                    </MenuItem>
+                </Menu>
+            </Toolbar>
+        </MUIAppBar>
     )
 }
 
-Header.propTypes = {
+AppBar.propTypes = {
     classes: PropTypes.object.isRequired,
-    onDrawerToggle: PropTypes.func.isRequired,
 }
 
-export default withRouter(withStyles(styles)(Header))
+export default withRouter(withStyles(styles)(AppBar))
