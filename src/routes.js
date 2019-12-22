@@ -7,8 +7,8 @@ const constants = {
     PRIVATE_DEFAULT : '/app',
     PRIVATE_DASHBOARD : '/app/dashboard',
 
-    PRIVATE_MAIN_USERS : '/app/users',
-    PRIVATE_MAIN_PAGE_TWO : '/app/main/pageTWO',
+    PRIVATE_USERS : '/app/users',
+    PRIVATE_TEAMS : '/app/teams',
 
     PRIVATE_CONFIG_PAGE_ONE : '/app/config/pageOne',
     PRIVATE_CONFIG_PAGE_TWO : '/app/config/pageTWO',

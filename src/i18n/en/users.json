@@ -1,6 +1,7 @@
 {
   "listing" : {
     "column" : {
+      "id" : "UUID",
       "lastname" : "Last Name",
       "firstname" : "First Name"
     }

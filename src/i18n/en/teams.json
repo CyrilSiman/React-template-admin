@@ -1,0 +1,12 @@
+{
+  "button": {
+    "addTeam": "Add a new team"
+  },
+  "listing" : {
+    "column" : {
+      "id" : "UUID",
+      "name" : "Name",
+      "createdAt" : "Created at"
+    }
+  }
+}

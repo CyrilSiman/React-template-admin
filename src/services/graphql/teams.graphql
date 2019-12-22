@@ -1,0 +1,9 @@
+
+query teamsQuery {
+    teams {
+        _id,
+        name,
+        createdAt,
+        updatedAt
+    }
+}

@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react'
+import React, { Fragment, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
-import { withRouter} from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { useApolloClient, useQuery } from 'react-apollo'
-import {default as MUIAppBar} from '@material-ui/core/AppBar'
+import { default as MUIAppBar } from '@material-ui/core/AppBar'
 
 import Avatar from '@material-ui/core/Avatar'
 import Tooltip from '@material-ui/core/Tooltip'
@@ -20,6 +20,8 @@ import PermIdentity from '@material-ui/icons/PermIdentity'
 import HelpIcon from '@material-ui/icons/Help'
 import NotificationsIcon from '@material-ui/icons/Notifications'
 import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew'
+
+import Profile from 'ROOT/scenes/profile'
 
 import { withStyles } from '@material-ui/core/styles'
 import styles from './styles'
@@ -42,99 +44,111 @@ const AppBar = (props) => {
         }
     })
 
-    const { loading : loadingMe, data : dataMe } = useQuery(meQuery,{
-        onError : () => {
+    const { loading: loadingMe, data: dataMe } = useQuery(meQuery, {
+        onError: () => {
             logoutMutation()
         }
     })
 
     const [menuOpen, setMenuOpen] = useState(false)
+    const [profilOpen, setProfileOpen] = useState(false)
     const anchorEl = useRef(null)
 
     const toggleLeftMenu = () => {
-        client.writeData({ data: { showLeftMenu : true }})
+        client.writeData({ data: { showLeftMenu: true } })
     }
 
-    const twoLetterFromName = (lastName,firstName) => {
+    const twoLetterFromName = (lastName, firstName) => {
         let initial = ''
-        if(lastName) {
+        if (lastName) {
             initial += lastName[0]
         }
-        if(firstName) {
+        if (firstName) {
             initial += firstName[0]
         }
         return initial
     }
 
     return (
-        <MUIAppBar color="primary" position="sticky"  elevation={4} className={classes.header}>
-            <Toolbar >
-                <Grid container spacing={1} alignItems="center">
-                    <Hidden lgUp>
+        <Fragment>
+            {profilOpen && <Profile onClose={() => {
+                setMenuOpen(false)
+                setProfileOpen(false)
+            }} />}
+            <MUIAppBar color="primary" position="sticky" elevation={2} className={classes.header}>
+                <Toolbar>
+                    <Grid container spacing={1} alignItems="center">
+                        <Hidden lgUp>
+                            <Grid item xs>
+                                <IconButton
+                                    color="inherit"
+                                    aria-label="Open drawer"
+                                    onClick={toggleLeftMenu}
+                                    className={classes.menuButton}
+                                >
+                                    <MenuIcon />
+                                </IconButton>
+                            </Grid>
+                        </Hidden>
                         <Grid item xs>
-                            <IconButton
-                                color="inherit"
-                                aria-label="Open drawer"
-                                onClick={toggleLeftMenu}
-                                className={classes.menuButton}
-                            >
-                                <MenuIcon />
+                        </Grid>
+                        <Grid item>
+                            <Tooltip title={t('alerts')}>
+                                <IconButton color="inherit">
+                                    <NotificationsIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </Grid>
+                        <Grid item>
+                            <Tooltip title={t('help')}>
+                                <IconButton color="inherit">
+                                    <HelpIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </Grid>
+                        <Grid item>
+                            <IconButton ref={anchorEl} color="inherit" className={classes.iconButtonAvatar}
+                                        onClick={() => setMenuOpen(true)}>
+                                <Avatar className={classes.avatar}>
+                                    {!loadingMe && dataMe && twoLetterFromName(dataMe.me.firstName, dataMe.me.lastName,)}
+                                </Avatar>
                             </IconButton>
                         </Grid>
-                    </Hidden>
-                    <Grid item xs>
                     </Grid>
-                    <Grid item>
-                        <Tooltip title={t('alerts')}>
-                            <IconButton color="inherit">
-                                <NotificationsIcon />
-                            </IconButton>
-                        </Tooltip>
-                    </Grid>
-                    <Grid item>
-                        <Tooltip title={t('help')}>
-                            <IconButton color="inherit">
-                                <HelpIcon />
-                            </IconButton>
-                        </Tooltip>
-                    </Grid>
-                    <Grid item>
-                        <IconButton ref={anchorEl} color="inherit" className={classes.iconButtonAvatar} onClick={() => setMenuOpen(true)}>
-                            <Avatar className={classes.avatar} >
-                                {!loadingMe && dataMe && twoLetterFromName(dataMe.me.firstName,dataMe.me.lastName,)}
-                            </Avatar>
-                        </IconButton>
-                    </Grid>
-                </Grid>
-                <Menu
-                    id='menu-appbar'
-                    anchorEl={anchorEl.current}
-                    anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                    transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                    open={menuOpen}
-                    onClose={() => setMenuOpen(false)}
-                >
-                    <MenuItem onClick={() => setMenuOpen(false)}>
-                        <ListItemIcon className={classes.icon}>
-                            <PermIdentity/>
-                        </ListItemIcon>
-                        <ListItemText classes={{primary: classes.primary}} inset primary={t('profile')}/>
-                    </MenuItem>
-                    <MenuItem onClick={logoutMutation}>
-                        <ListItemIcon className={classes.icon}>
-                            <PowerSettingsNew />
-                        </ListItemIcon>
-                        <ListItemText classes={{ primary: classes.primary }} inset primary={t('logout')} />
-                    </MenuItem>
-                </Menu>
-            </Toolbar>
-        </MUIAppBar>
+                    <Menu
+                        id='menu-appbar'
+                        anchorEl={anchorEl.current}
+                        anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                        open={menuOpen}
+                        onClose={() => setMenuOpen(false)}
+                    >
+                        <MenuItem onClick={() => {
+                            setMenuOpen(false)
+                            setProfileOpen(true)
+                            }
+                        }>
+                            <ListItemIcon className={classes.icon}>
+                                <PermIdentity />
+                            </ListItemIcon>
+                            <ListItemText classes={{ primary: classes.primary }} inset primary={t('profile')} />
+                        </MenuItem>
+                        <MenuItem onClick={logoutMutation}>
+                            <ListItemIcon className={classes.icon}>
+                                <PowerSettingsNew />
+                            </ListItemIcon>
+                            <ListItemText classes={{ primary: classes.primary }} inset primary={t('logout')} />
+                        </MenuItem>
+                    </Menu>
+                </Toolbar>
+            </MUIAppBar>
+        </Fragment>
     )
 }
 

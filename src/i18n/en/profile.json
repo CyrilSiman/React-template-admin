@@ -1,0 +1,16 @@
+{
+  "dialogTitle": "Your profile",
+  "changeYourPassword": "Change password",
+  "field" : {
+    "lastName": "Last name",
+    "firstName": "First name",
+    "email": "Email",
+    "oldPassword" : "Current password",
+    "password" : "New password",
+    "confirmPassword" : "Confirm password"
+  },
+  "button" : {
+    "cancel": "Cancel",
+    "update": "Update"
+  }
+}

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import {withStyles} from '@material-ui/styles'
 
@@ -8,8 +8,13 @@ import Paper from '@material-ui/core/Paper'
 import Link from '@material-ui/core/Link'
 import Breadcrumbs from '@material-ui/core/Breadcrumbs'
 import LinearProgress from '@material-ui/core/LinearProgress'
+import Tooltip from '@material-ui/core/Tooltip'
+import Fab from '@material-ui/core/Fab'
+import AddIcon from '@material-ui/icons/Add'
+import Box from '@material-ui/core/Box'
 
 import {usersQuery} from 'ROOT/services/graphql/users.graphql'
+import routes from 'ROOT/routes'
 
 import styles from './styles'
 import { useTranslation } from 'react-i18next'
@@ -31,28 +36,27 @@ const columnTypes = {
 }
 const columnDefs = (t) => [
     {
+        headerName: t('listing.column.id'),
+        field: '_id',
+        width: 130,
+    },
+    {
         headerName: t('listing.column.lastname'),
         field: 'lastName',
-        suppressSizeToFit: false,
         width: 130,
     },
     {
         headerName: t('listing.column.firstname'),
         field: 'firstName',
-        suppressSizeToFit: false,
         width: 130,
     },
     {
         headerName: 'Type',
         field: 'client_type_rid',
-        suppressSizeToFit: false,
-        width: 50,
     },
     {
         headerName: 'Statut',
         field: 'clientStatus',
-        suppressSizeToFit: false,
-        width: 50,
     }
 ]
 
@@ -61,20 +65,32 @@ const Main = (props) => {
     const { classes } = props
     const {data:dataUsers, loading: loadingUsers, error:errorUsers} = useQuery(usersQuery)
     const {t} = useTranslation('users')
+    const [dialogCreateUserOpened,setDialogCreateUserOpened] = useState(false)
 
     return (
         <Fragment>
             {loadingUsers ? <LinearProgress/> : <div style={{height: '4px'}}></div>}
             <div className={classes.content}>
                 <Breadcrumbs aria-label="breadcrumb">
-                    <Link color="inherit" href="/" onClick={() => console.log('la')}>
+                    <Link color="inherit" to={routes.PRIVATE_DASHBOARD}>
                         MyApp
                     </Link>
-                    <Link color="inherit" href="/getting-started/installation/" onClick={() => console.log('la')}>
+                    <Link color="inherit" to={routes.PRIVATE_USERS}>
                         Users
                     </Link>
                 </Breadcrumbs>
                 <Paper className={classes.tablePaper}>
+                    <Box display="flex" flexDirection="row-reverse">
+                        <Tooltip title="Inviter un prescripteur"
+                                 aria-label="Inviter un prescripteur" placement="right">
+                            <Fab color="primary" aria-label="Add" className={classes.addButton}
+                                 onClick={() => setDialogCreateUserOpened(true)} size="medium">
+                                <AddIcon/>
+                            </Fab>
+                        </Tooltip>
+                    </Box>
+
+
                     <div id="myGrid"
                          className="ag-theme-material"
                          style={{
