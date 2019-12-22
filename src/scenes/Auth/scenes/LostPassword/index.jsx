@@ -5,7 +5,6 @@ import styles from './styles'
 import TextField from 'ROOT/components/InputForm/TextField'
 import Button from '@material-ui/core/Button/Button'
 import WindowForm from 'ROOT/components/Window'
-import SnackBar from 'ROOT/components/SnackBar'
 import {Link} from 'react-router-dom'
 import Icon from '@material-ui/core/Icon'
 import { useMutation } from '@apollo/react-hooks'
@@ -18,11 +17,7 @@ const LostPasswordScene = (props) => {
     const [resetPasswordMutation, { loading: resetPasswordLoading, error: errorResetpasword }] = useMutation(resetPassword, {
         onCompleted:(data) => {
             if(data.lostPasswordMutation.sucess) {
-                let message = 'Un mail vient de vous être adressé contenant la procédure pour réinitialiser votre mot de passe.'
-                //let snack = <SnackBar variant='success' message={message} open={true} />
             } else {
-                let message = 'Aucun compte associé a cet émail, merci de vérifier l\'émail saisi.'
-                //let snack = <SnackBar variant='error' message={message} open={true} />
             }
         },
         onError:() => {}

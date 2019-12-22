@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import PropTypes from 'prop-types'
-import { withRouter, useHistory } from 'react-router-dom'
+import { withRouter} from 'react-router-dom'
 import { useApolloClient, useQuery } from 'react-apollo'
 import {default as MUIAppBar} from '@material-ui/core/AppBar'
 
@@ -31,19 +31,14 @@ const AppBar = (props) => {
 
     const { classes } = props
     const { t } = useTranslation('appBar')
-    const history = useHistory()
     const client = useApolloClient()
 
     const [logoutMutation] = useMutation(logoutQuery, {
         onCompleted: async (data) => {
             await client.resetStore()
-            //client.writeData({ data: { isLoggedIn: false } })
-            //history.push('/')
         },
         onError: async (error) => {
             await client.resetStore()
-            //client.writeData({ data: { isLoggedIn: false } })
-            //history.push('/')
         }
     })
 

@@ -1,0 +1,9 @@
+
+query usersQuery {
+    users {
+        _id,
+        email,
+        lastName,
+        firstName,
+    }
+}

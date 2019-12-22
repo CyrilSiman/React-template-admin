@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react'
 import { useApolloClient, useQuery } from '@apollo/react-hooks'
-import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
 import useTheme from '@material-ui/core/styles/useTheme'
 
@@ -12,14 +11,13 @@ import Navigator from './components/Navigator'
 
 import { localState } from 'ROOT/services/graphql/localState.graphql'
 
-import styles, { drawerWidth } from './styles'
+import styles from './styles'
 
 const LeftSideMenu = (props) => {
 
     const client = useApolloClient()
     let history = useHistory()
     let theme = useTheme()
-    const { t } = useTranslation('global')
 
     const { loading, data } = useQuery(localState)
 

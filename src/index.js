@@ -12,6 +12,9 @@ import frLocale from 'date-fns/locale/fr'
 import DateFnsUtils from '@date-io/date-fns'
 import {SnackbarProvider} from 'notistack'
 
+import 'ag-grid-community/dist/styles/ag-grid.css'
+import 'ag-grid-community/dist/styles/ag-theme-material.css'
+
 import './configI18n'
 
 import { ApolloProvider } from '@apollo/react-hooks'

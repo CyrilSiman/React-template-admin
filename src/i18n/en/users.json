@@ -1,0 +1,8 @@
+{
+  "listing" : {
+    "column" : {
+      "lastname" : "Last Name",
+      "firstname" : "First Name"
+    }
+  }
+}

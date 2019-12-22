@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
-import {Link, Route} from 'react-router-dom'
+import {Route} from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
 
 import routes from 'ROOT/routes'

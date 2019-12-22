@@ -1,6 +1,5 @@
 import React from 'react'
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
-import constants from 'ROOT/services/constants'
 import routes from 'ROOT/routes'
 
 import AuthenticatedRouter from 'ROOT/AuthenticatedRouter'
