@@ -17,11 +17,12 @@ const styles = theme => ({
     },
     disabled: {},
     formHelper:{
+        marginTop: 2,
         fontStyle : 'italic',
     },
     formHelperDisabled: {
         marginTop : 0,
-        marginBottom : 8,
+        marginBottom : 0,
     }
 })
 

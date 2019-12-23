@@ -28,6 +28,7 @@ import styles from './styles'
 import { useTranslation } from 'react-i18next'
 import { logoutQuery, meQuery } from 'ROOT/services/graphql/auth.graphql'
 import { useMutation } from '@apollo/react-hooks'
+import ReactJoyride from 'react-joyride'
 
 const AppBar = (props) => {
 
@@ -52,6 +53,8 @@ const AppBar = (props) => {
 
     const [menuOpen, setMenuOpen] = useState(false)
     const [profilOpen, setProfileOpen] = useState(false)
+    const [joyrideOpen, setJoyrideOpen] = useState(false)
+
     const anchorEl = useRef(null)
 
     const toggleLeftMenu = () => {
@@ -75,6 +78,43 @@ const AppBar = (props) => {
                 setMenuOpen(false)
                 setProfileOpen(false)
             }} />}
+            {joyrideOpen && <ReactJoyride
+                callback={(value) => {
+                    if(value.action === 'close') {
+                        setJoyrideOpen(false)
+                    }
+                }}
+                continuous={true}
+                styles={{
+                    options: {
+                        //arrowColor: '#e3ffeb',
+                        //backgroundColor: '#e3ffeb',
+                        overlayColor: 'rgba(0, 0, 0, 0.5)',
+                        //primaryColor: '#000',
+                        //textColor: '#004a14',
+                        //width: 900,
+                        zIndex: 2000,
+                    }
+                }}
+                floaterProps={{
+                    disableAnimation:true,
+                }}
+                steps={
+                [
+                    {
+                        target: '.joyride-step1',
+                        content: 'This is my awesome feature!',
+                        disableBeacon : true,
+                        placement : 'right'
+                    },
+                    {
+                        target: '.joyride-step2',
+                        content: 'This another awesome feature!',
+                        placement : 'right',
+                        disableBeacon : true
+                    },
+                ]
+            } />}
             <MUIAppBar color="primary" position="sticky" elevation={2} className={classes.header}>
                 <Toolbar>
                     <Grid container spacing={1} alignItems="center">
@@ -100,7 +140,7 @@ const AppBar = (props) => {
                             </Tooltip>
                         </Grid>
                         <Grid item>
-                            <Tooltip title={t('help')}>
+                            <Tooltip title={t('help')} onClick={() => setJoyrideOpen(true)}>
                                 <IconButton color="inherit">
                                     <HelpIcon />
                                 </IconButton>

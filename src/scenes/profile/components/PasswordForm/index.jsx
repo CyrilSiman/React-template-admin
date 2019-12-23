@@ -4,18 +4,14 @@ import { withStyles } from '@material-ui/core'
 
 import { Field, Form } from 'react-final-form'
 
-import validator, { mustBeIdentical, required, passwordComplexity,minValue } from 'ROOT/services/validator'
+import validator, { mustBeIdentical, required, passwordComplexity } from 'ROOT/services/validator'
 
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
 import Grid from '@material-ui/core/Grid'
-import DialogActions from '@material-ui/core/DialogActions'
 import Button from '@material-ui/core/Button'
 
 import JTextField from 'ROOT/components/InputForm/TextField'
 
 import styles from './styles'
-import Typography from '@material-ui/core/Typography'
 
 const PasswordForm = (props) => {
 
@@ -45,9 +41,8 @@ const PasswordForm = (props) => {
             }}
             render={({ handleSubmit, form, pristine, submitting, values }) => (
                 <form onSubmit={handleSubmit}>
-                    <Typography className={classes.passwordTitle}>{t('changeYourPassword')}</Typography>
-                    <DialogContent>
-                        <Grid container className={classes.detailMain} spacing={2}>
+                    <div>
+                        <Grid container className={classes.detailMain} spacing={1}>
                             <Grid item xs={12}>
                                 <Field
                                     name="oldPassword"
@@ -79,16 +74,16 @@ const PasswordForm = (props) => {
                                 />
                             </Grid>
                         </Grid>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={props.onClose} disabled={submitting} variant="contained">
-                            {t('button.cancel')}
+                    </div>
+                    <div className={classes.divButton}>
+                        <Button onClick={() => form.reset()} disabled={submitting} variant="contained">
+                            {t('button.reset')}
                         </Button>
                         <Button type="submit" color="primary" disabled={submitting || pristine}
                                 variant="contained">
                             {t('button.update')}
                         </Button>
-                    </DialogActions>
+                    </div>
                 </form>
             )} />
     )

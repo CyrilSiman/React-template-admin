@@ -1,5 +1,5 @@
 {
-  "dialogTitle": "Your profile",
+  "dialogTitle": "Profile",
   "changeYourPassword": "Change password",
   "field" : {
     "lastName": "Last name",
@@ -10,6 +10,7 @@
     "confirmPassword" : "Confirm password"
   },
   "button" : {
+    "reset": "Reset",
     "cancel": "Cancel",
     "update": "Update"
   }

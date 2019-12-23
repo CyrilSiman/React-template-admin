@@ -27,7 +27,7 @@ const Navigator = (props) => {
                         <ListItem
                             button
                             onClick={() => navigateToLink(routes.PRIVATE_DASHBOARD)}
-                            className={classNames(classes.item, classes.topItemCategory, match && classes.itemActiveItem)}>
+                            className={classNames(classes.item, classes.topItemCategory, match && classes.itemActiveItem, 'joyride-step1')}>
                             <ListItemIcon className={classes.itemIcon}>
                                 <HomeIcon />
                             </ListItemIcon>
@@ -61,6 +61,7 @@ const Navigator = (props) => {
                                     className={classNames(
                                         classes.item,
                                         match && classes.itemActiveItem,
+                                        'joyride-step2',
                                     )}
                                 >
                                     <ListItemIcon className={classes.itemIcon}>{icon}</ListItemIcon>

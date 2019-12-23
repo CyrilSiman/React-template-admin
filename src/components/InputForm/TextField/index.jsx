@@ -11,7 +11,7 @@ const TextField = ({readOnly, rows, label, required, fullWidth, multiline, autoF
     const showError = ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) && meta.touched
 
     return (
-        <FormControl className={classes.formControlMargin} fullWidth={fullWidth} disabled={readOnly} error={showError} >
+        <FormControl className={classes.formControlMargin} fullWidth={fullWidth} disabled={readOnly} error={!!showError} >
             <InputLabel htmlFor={`${name}-input`} shrink={true} required={required}>
                 {label}
             </InputLabel>
@@ -27,9 +27,7 @@ const TextField = ({readOnly, rows, label, required, fullWidth, multiline, autoF
                 rows={rows}
                 type={type ? type : 'text'}
             />
-            {showError &&
-                <FormHelperText error classes={{root:classes.formHelper,disabled:classes.formHelperDisabled}}>{meta.error || meta.submitError}</FormHelperText>
-            }
+            <FormHelperText error classes={{root:classes.formHelper,disabled:classes.formHelperDisabled}}>{showError && (meta.error || meta.submitError)}</FormHelperText>
         </FormControl>
     )
 }

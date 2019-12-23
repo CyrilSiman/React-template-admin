@@ -27,9 +27,9 @@ export const defaultTheme = {
     drawerWidth:256,
     mainBackgroundColor:'#faf8fb',
     leftMenu: {
-        selectedItemCircle:'#f73378',
+        selectedItemCircle:'#dddddd', //67B9fa
         selectedItemColor:'#ffffff',
-        selectedItemBoxShadow: 'inset 4px 0 0 #4799da',
+        selectedItemBoxShadow: 'inset 4px 0 0 #f73378', //4799da
     },
     overrides: {
         MuiDrawer: {
@@ -57,7 +57,7 @@ export const defaultTheme = {
                 height: 3,
                 borderTopLeftRadius: 3,
                 borderTopRightRadius: 3,
-                backgroundColor: theme.palette.common.white,
+                backgroundColor: theme.palette.secondary,
             },
         },
         MuiTab: {

@@ -19,8 +19,6 @@ function App () {
         return <div>Loading</div>
     }
 
-    console.log(data)
-
     if(!loading && data && !data.appConfigured) {
         return <Router><AppInitScene/></Router>
     }

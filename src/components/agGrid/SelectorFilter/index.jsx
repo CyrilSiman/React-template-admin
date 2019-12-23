@@ -97,7 +97,6 @@ class SelectorUIFilter extends Component {
             elements: [{label: 'Activé', selected: true}, {label: 'Gelé', selected: false}]
         })
         this.props.filterChangedCallback()
-        console.log(model)
     }
 
     afterGuiAttached({hidePopup}) {
