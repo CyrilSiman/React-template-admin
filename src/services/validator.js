@@ -12,6 +12,14 @@ export const minValue = min => value =>
 export const maxValue = max => value =>
     isNaN(value) || value <= max ? undefined : 'validator.lowerThan'
 
-export default function validator(value,...validators) {
-    return validators.reduce((error, validator) => error || validator(value), undefined)
+/**
+ * Validate values and return translate error if necessary or undefined otherwise
+ * @param value value tested
+ * @param translateFunc function used to translate error
+ * @param validators validators
+ * @returns {*}
+ */
+export default function validator(value,translateFunc, ...validators) {
+    const error = validators.reduce((error, validator) => error || validator(value), undefined)
+    return error ? translateFunc(error) : undefined
 }

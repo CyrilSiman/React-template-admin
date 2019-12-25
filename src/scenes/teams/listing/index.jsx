@@ -13,6 +13,8 @@ import Box from '@material-ui/core/Box'
 
 import Link from 'ROOT/components/Link'
 
+import CreateTeam from './components/create'
+
 import {teamsQuery} from 'ROOT/services/graphql/teams.graphql'
 
 import routes from 'ROOT/routes'
@@ -44,7 +46,7 @@ const columnDefs = (t) => [
     },
     {
         headerName: t('listing.column.name'),
-        field: 'lastName',
+        field: 'name',
         suppressSizeToFit: false,
         width: 130,
     },
@@ -66,6 +68,7 @@ const Main = (props) => {
     return (
         <Fragment>
             {loadingTeams ? <LinearProgress/> : <div style={{height: '4px'}}></div>}
+            {dialogCreateTeamOpened && <CreateTeam onClose={() => setDialogCreateTeamOpened(false)} />}
             <div className={classes.content}>
                 <Breadcrumbs aria-label="breadcrumb">
                     <Link color="inherit" to={routes.PRIVATE_DASHBOARD}>

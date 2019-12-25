@@ -28,9 +28,9 @@ const InformationForm = (props) => {
             onSubmit={(values) => submitForm(values)}
             validate={(values) => {
                 const errors = {}
-                errors.firstName = tError(validator(values.firstName, required))
-                errors.lastName = tError(validator(values.lastName, required))
-                errors.email = tError(validator(values.email, required, mustBeAnEmail))
+                errors.firstName = validator(values.firstName,tError, required)
+                errors.lastName = validator(values.lastName,tError, required)
+                errors.email = validator(values.email,tError, required, mustBeAnEmail)
                 return errors
             }
             }

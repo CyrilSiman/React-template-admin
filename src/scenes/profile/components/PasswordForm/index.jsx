@@ -28,9 +28,9 @@ const PasswordForm = (props) => {
             onSubmit={(values) => submitForm(values)}
             validate={(values) => {
                 const errors = {}
-                errors.oldPassword = tError(validator(values.oldPassword, required))
-                errors.password = tError(validator(values.password, required, passwordComplexity))
-                errors.confirmPassword = tError(validator(values.confirmPassword, required, mustBeIdentical(values.password)))
+                errors.oldPassword = validator(values.oldPassword,tError, required)
+                errors.password = validator(values.password,tError, required, passwordComplexity)
+                errors.confirmPassword = validator(values.confirmPassword,tError, required, mustBeIdentical(values.password))
                 return errors
             }
             }

@@ -1,6 +1,12 @@
 {
+  "dialogCreate": "New team",
   "button": {
-    "addTeam": "Add a new team"
+    "addTeam": "Add a new team",
+    "add": "Add",
+    "cancel": "Cancel"
+  },
+  "field": {
+    "name": "Name"
   },
   "listing" : {
     "column" : {

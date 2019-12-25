@@ -7,3 +7,12 @@ query teamsQuery {
         updatedAt
     }
 }
+
+mutation createTeam($name : String!) {
+    createTeam(name:$name) {
+        _id,
+        name,
+        createdAt,
+        updatedAt
+    }
+}
