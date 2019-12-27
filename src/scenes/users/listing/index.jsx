@@ -65,7 +65,7 @@ const Main = (props) => {
     const { classes } = props
     const {data:dataUsers, loading: loadingUsers, error:errorUsers} = useQuery(usersQuery)
     const {t} = useTranslation('users')
-    const [dialogCreateUserOpened,setDialogCreateUserOpened] = useState(false)
+    const [,setDialogCreateUserOpened] = useState(false)
 
     return (
         <Fragment>

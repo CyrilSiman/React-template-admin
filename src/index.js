@@ -6,14 +6,13 @@ import * as serviceWorker from './serviceWorker'
 import AppApolloClient from 'ROOT/services/AppApolloClient'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import {MuiThemeProvider} from '@material-ui/core'
-import {defaultTheme} from 'ROOT/themes'
+import {defaultTheme} from 'ROOT/themes/themes'
 import {MuiPickersUtilsProvider} from '@material-ui/pickers'
 import frLocale from 'date-fns/locale/fr'
 import DateFnsUtils from '@date-io/date-fns'
 import {SnackbarProvider} from 'notistack'
 
-import 'ag-grid-community/dist/styles/ag-grid.css'
-import 'ag-grid-community/dist/styles/ag-theme-material.css'
+import './themes/agridStyle.scss'
 
 import './configI18n'
 

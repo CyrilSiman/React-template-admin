@@ -15,7 +15,7 @@ import Grid from '@material-ui/core/Grid'
 
 import JTextField from 'ROOT/components/InputForm/TextField'
 
-import {createTeam} from 'ROOT/services/graphql/teams.graphql'
+import {createTeam,teamsQuery} from 'ROOT/services/graphql/teams.graphql'
 
 import {hasError} from 'ROOT/services/utils'
 import constants from 'ROOT/services/constants'
@@ -30,7 +30,14 @@ const CreateDialog = (props) => {
     const {t:tError} = useTranslation('errors')
 
     const [teamMutation] = useMutation(createTeam, {
-        onCompleted: (data) => {
+        update : (cache, { data: { createTeam } }) => {
+            const {teams} = cache.readQuery({query: teamsQuery})
+            cache.writeQuery({
+                query: teamsQuery,
+                data: {teams:teams.concat(createTeam)}
+            })
+        },
+        onCompleted : () => {
             onClose()
         },
         onError: (error) => {

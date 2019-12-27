@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/react-hooks'
 import {withStyles} from '@material-ui/styles'
 import { AgGridReact } from 'ag-grid-react'
 
+import format from 'date-fns/format'
 import Paper from '@material-ui/core/Paper'
 import Breadcrumbs from '@material-ui/core/Breadcrumbs'
 import LinearProgress from '@material-ui/core/LinearProgress'
@@ -10,6 +11,7 @@ import Tooltip from '@material-ui/core/Tooltip'
 import AddIcon from '@material-ui/icons/Add'
 import Fab from '@material-ui/core/Fab'
 import Box from '@material-ui/core/Box'
+import { Checkbox } from '@material-ui/core'
 
 import Link from 'ROOT/components/Link'
 
@@ -37,7 +39,16 @@ const columnTypes = {
         },
     },
 }
-const columnDefs = (t) => [
+const columnDefs = (t,tGlobal) => [
+    {
+        headerName: '',
+        suppressMenu: true,
+        sortable: false,
+        filter: false,
+        checkboxSelection: true,
+        suppressSizeToFit: false,
+        width: 30,
+    },
     {
         headerName: t('listing.column.id'),
         field: '_id',
@@ -53,7 +64,9 @@ const columnDefs = (t) => [
     {
         headerName: t('listing.column.createdAt'),
         field: 'createdAt',
-        suppressSizeToFit: false,
+        valueFormatter: function (params) {
+            return format(new Date(params.value),tGlobal('date.format1'))
+        },
         width: 130,
     },
 ]
@@ -61,8 +74,11 @@ const columnDefs = (t) => [
 const Main = (props) => {
 
     const { classes } = props
-    const {data:dataTeams, loading: loadingTeams, error:errorTeams} = useQuery(teamsQuery)
+    const {data:dataTeams, loading: loadingTeams, error:errorTeams} = useQuery(teamsQuery,{
+        partialRefetch:true
+    })
     const {t} = useTranslation('teams')
+    const {t:tGlobal} = useTranslation('global')
     const [dialogCreateTeamOpened,setDialogCreateTeamOpened] = useState(false)
 
     return (
@@ -88,17 +104,20 @@ const Main = (props) => {
                             </Fab>
                         </Tooltip>
                     </Box>
+                    <Box display="flex">
+                        <Checkbox >test</Checkbox>
+                    </Box>
                     <div id="myGrid"
                          className="ag-theme-material"
                          style={{
-                             height: '553px', width: '100%', padding: 8 * 3
+                             height: '553px', width: '100%'
                          }}
                     >
                         <AgGridReact
-                            columnDefs={columnDefs(t)}
+                            columnDefs={columnDefs(t,tGlobal)}
                             defaultColDef={defaultColDef}
                             columnTypes={columnTypes}
-                            rowData={errorTeams || loadingTeams ? null : dataTeams.teams}
+                            rowData={errorTeams || loadingTeams  ? null : [...dataTeams.teams]}
                             suppressCellSelection={true}
                             suppressRowClickSelection={true}
                             suppressMovableColumns={true}
@@ -106,7 +125,7 @@ const Main = (props) => {
                             pagination={true}
                             paginationAutoPageSize={true}
                             rowHeight={40}
-                            rowSelection='single'
+                            rowSelection='multiple'
                             headerHeight={40}
                             floatingFiltersHeight={40}
                             onGridReady={(params) => params.api.sizeColumnsToFit()}
