@@ -18,6 +18,7 @@ import routes from 'ROOT/routes'
 
 import styles from './styles'
 import { useTranslation } from 'react-i18next'
+import CheckBoxCellRender from 'ROOT/components/agGrid/CheckboxCellRender'
 
 const defaultColDef = {
     suppressMenu: true,

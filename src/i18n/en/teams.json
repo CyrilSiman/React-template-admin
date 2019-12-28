@@ -3,7 +3,10 @@
   "button": {
     "addTeam": "Add a new team",
     "add": "Add",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "refresh": "Refresh",
+    "selectAll": "Select all",
+    "delete": "Delete"
   },
   "field": {
     "name": "Name"

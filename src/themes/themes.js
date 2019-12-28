@@ -76,6 +76,7 @@ export const defaultTheme = {
         },
         MuiTooltip: {
             tooltip: {
+                fontSize:11,
                 borderRadius: 4,
             },
         },

@@ -11,6 +11,11 @@ const styles = theme => ({
         marginTop: -40,
         zIndex: 2,
     },
+    vDivider:{
+        height: 20,
+        marginTop: 10,
+        backgroundColor: '#cccccc',
+    }
 })
 
 export default styles

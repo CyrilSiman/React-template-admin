@@ -12,8 +12,17 @@ import AddIcon from '@material-ui/icons/Add'
 import Fab from '@material-ui/core/Fab'
 import Box from '@material-ui/core/Box'
 import { Checkbox } from '@material-ui/core'
+import Zoom from '@material-ui/core/Zoom'
+import Divider from '@material-ui/core/Divider'
+import Grid from '@material-ui/core/Grid'
 
 import Link from 'ROOT/components/Link'
+
+import DeleteIcon from '@material-ui/icons/Delete'
+import RefreshIcon from '@material-ui/icons/Refresh'
+import IconButton from '@material-ui/core/IconButton'
+
+import CheckBoxCellRender from 'ROOT/components/agGrid/CheckboxCellRender'
 
 import CreateTeam from './components/create'
 
@@ -22,6 +31,7 @@ import {teamsQuery} from 'ROOT/services/graphql/teams.graphql'
 import routes from 'ROOT/routes'
 import styles from './styles'
 import { useTranslation } from 'react-i18next'
+
 
 
 const defaultColDef = {
@@ -45,8 +55,8 @@ const columnDefs = (t,tGlobal) => [
         suppressMenu: true,
         sortable: false,
         filter: false,
-        checkboxSelection: true,
         suppressSizeToFit: false,
+        cellRenderer: 'checkBoxCellRender',
         width: 30,
     },
     {
@@ -74,12 +84,49 @@ const columnDefs = (t,tGlobal) => [
 const Main = (props) => {
 
     const { classes } = props
-    const {data:dataTeams, loading: loadingTeams, error:errorTeams} = useQuery(teamsQuery,{
+    const {data:dataTeams, loading: loadingTeams, error:errorTeams, refetch:refreshTeams} = useQuery(teamsQuery,{
         partialRefetch:true
     })
+    const [gridApi,setGridApi] = useState(null)
+    const [elementSelectedState,setElementSelectedState] = useState({elementSelected:false,allSelected:false})
     const {t} = useTranslation('teams')
     const {t:tGlobal} = useTranslation('global')
     const [dialogCreateTeamOpened,setDialogCreateTeamOpened] = useState(false)
+
+    const toggleSelectedAll = () => {
+
+        if(gridApi) {
+            const selectedNode = gridApi.getSelectedNodes()
+            if(selectedNode.length > 0) {
+                gridApi.deselectAll()
+            } else {
+                gridApi.selectAllFiltered()
+            }
+        }
+        gridApi.refreshCells({force:true})
+    }
+
+    const deleteTeams = () => {
+        console.log('delete teams')
+    }
+
+    const onSelectionChange = (params) => {
+        const rowLength = gridApi.getModel().getRootNode().allLeafChildren.length
+        const selectedRowLength = gridApi.getSelectedNodes().length
+        const newState = {
+            elementSelected:false,
+            allSelected:false
+        }
+        if(selectedRowLength>0) {
+            newState.elementSelected = true
+
+            if(selectedRowLength === rowLength) {
+                newState.allSelected = true
+            }
+        }
+
+        setElementSelectedState(newState)
+    }
 
     return (
         <Fragment>
@@ -104,9 +151,29 @@ const Main = (props) => {
                             </Fab>
                         </Tooltip>
                     </Box>
-                    <Box display="flex">
-                        <Checkbox >test</Checkbox>
-                    </Box>
+                    <Grid container >
+                        <Tooltip title={t('button.selectAll')} onClick={() => toggleSelectedAll()}
+                                 aria-label={t('button.selectAll')} placement="bottom">
+                        <Checkbox indeterminate={elementSelectedState.elementSelected && !elementSelectedState.allSelected} checked={elementSelectedState.elementSelected} style={{marginLeft:15}} />
+                        </Tooltip>
+                        <Divider orientation="vertical" className={classes.vDivider}/>
+                        {!elementSelectedState.elementSelected &&
+                        <Zoom in={true}>
+                        <Tooltip title={t('button.refresh')}
+                                 aria-label={t('button.refresh')} placement="bottom">
+                        <IconButton aria-label="refresh" className={classes.margin} onClick={() => refreshTeams()}>
+                            <RefreshIcon fontSize="inherit" />
+                        </IconButton>
+                        </Tooltip></Zoom>}
+                        {elementSelectedState.elementSelected &&
+                        <Zoom in={true}>
+                        <Tooltip title={t('button.delete')}
+                                 aria-label={t('button.refresh')} placement="bottom">
+                            <IconButton aria-label="delete" className={classes.margin} onClick={() => deleteTeams()}>
+                                <DeleteIcon fontSize="inherit" />
+                            </IconButton>
+                        </Tooltip></Zoom>}
+                    </Grid>
                     <div id="myGrid"
                          className="ag-theme-material"
                          style={{
@@ -128,9 +195,16 @@ const Main = (props) => {
                             rowSelection='multiple'
                             headerHeight={40}
                             floatingFiltersHeight={40}
-                            onGridReady={(params) => params.api.sizeColumnsToFit()}
+                            onSelectionChanged={(params) => onSelectionChange(params)}
+                            onGridReady={(params) => {
+                                setGridApi(params.api)
+                                params.api.sizeColumnsToFit()
+                            }}
                             onGridSizeChanged={(params) => {
                                 params.api.sizeColumnsToFit()
+                            }}
+                            frameworkComponents={{
+                                checkBoxCellRender: CheckBoxCellRender
                             }}
                         />
                     </div>

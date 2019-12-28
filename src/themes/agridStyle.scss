@@ -2,21 +2,21 @@ $ag-icons-path: '~ag-grid-community/src/styles/icons/';
 $ag-mat-icons-path: '~ag-grid-community/src/styles/material-icons/';
 
 //$cell-horizontal-padding: 4px !default;
-$header-height: 39px;
+//$header-height: 39px;
 
 // Change the primary / accent colors
 $ag-mat-primary: #1976d2; //#1976d2
 $ag-mat-accent: #fbc02d; //F58282ee  //fbc02d
 
 //$selected-color: #e3f2fd; //#e3f2fd
-$ag-icon-color: rgba(0, 0, 0, 0.54) !default;
+//$ag-icon-color: rgba(0, 0, 0, 0.54) !default;
 
-$grid-size: 7px; // 8 by default
-$icon-size: 16px; // 18 by default
+$grid-size: 6px; // 8 by default
+//$icon-size: 16px; // 18 by default
 
-.ag-react-container {
-  flex-grow: 2;
-}
+//.ag-react-container {
+//  flex-grow: 2;
+//}
 
 @import "~ag-grid-community/src/styles/ag-grid.scss";
 @import "~ag-grid-community/src/styles/ag-theme-material/sass/ag-theme-material.scss";
