@@ -32,8 +32,6 @@ import routes from 'ROOT/routes'
 import styles from './styles'
 import { useTranslation } from 'react-i18next'
 
-
-
 const defaultColDef = {
     suppressMenu: true,
     sortable: true,
@@ -84,9 +82,7 @@ const columnDefs = (t,tGlobal) => [
 const Main = (props) => {
 
     const { classes } = props
-    const {data:dataTeams, loading: loadingTeams, error:errorTeams, refetch:refreshTeams} = useQuery(teamsQuery,{
-        partialRefetch:true
-    })
+    const {data:dataTeams, loading: loadingTeams, error:errorTeams, refetch:refreshTeams} = useQuery(teamsQuery,{ errorPolicy: 'all' })
     const [gridApi,setGridApi] = useState(null)
     const [elementSelectedState,setElementSelectedState] = useState({elementSelected:false,allSelected:false})
     const {t} = useTranslation('teams')
@@ -184,7 +180,7 @@ const Main = (props) => {
                             columnDefs={columnDefs(t,tGlobal)}
                             defaultColDef={defaultColDef}
                             columnTypes={columnTypes}
-                            rowData={errorTeams || loadingTeams  ? null : [...dataTeams.teams]}
+                            rowData={errorTeams || loadingTeams || !dataTeams.teams ? null : [...dataTeams.teams]}
                             suppressCellSelection={true}
                             suppressRowClickSelection={true}
                             suppressMovableColumns={true}
@@ -208,7 +204,6 @@ const Main = (props) => {
                             }}
                         />
                     </div>
-
                 </Paper>
             </div>
         </Fragment>

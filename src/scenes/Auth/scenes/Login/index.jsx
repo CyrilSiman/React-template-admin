@@ -2,8 +2,7 @@ import React from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { Field, Form } from 'react-final-form'
 import { useTranslation } from 'react-i18next'
-import { useQuery } from 'react-apollo'
-import { useApolloClient, useMutation } from '@apollo/react-hooks'
+import { useMutation } from '@apollo/react-hooks'
 import formatDistance from 'date-fns/formatDistance'
 import withStyles from '@material-ui/core/styles/withStyles'
 
@@ -17,28 +16,19 @@ import WindowForm from 'ROOT/components/Window'
 
 import routes from 'ROOT/routes'
 import styles from './styles'
-import { loginQuery, meQuery } from 'ROOT/services/graphql/auth.graphql'
+import { loginQuery } from 'ROOT/services/graphql/auth.graphql'
+import constants from 'ROOT/services/constants'
 
 const LoginScene = (props) => {
 
     let { classes } = props
     let history = useHistory()
     const { t } = useTranslation('auth')
-    const client = useApolloClient()
-
-    const {loading:loadingMeQuery} = useQuery(meQuery,{
-        onCompleted : () => {
-            client.writeData({ data: { isLoggedIn: true } })
-            history.push(history.location.state.from)
-        },
-        onError : () => {
-        }
-    })
 
     const [loginMutation, { loading: mutationLoading, data:dataLogin, error : errorMutation }] = useMutation(loginQuery, {
         onCompleted: (data) => {
             if(data.login && data.login.authenticated) {
-                client.writeData({ data: { isLoggedIn: true } })
+                localStorage.setItem(constants.IS_AUTHENTICATED, 'true')
                 history.push(routes.PRIVATE_DASHBOARD)
             }
         },
@@ -46,10 +36,6 @@ const LoginScene = (props) => {
             //Necessary to fix Appolo Client error
         }
     })
-
-    if(loadingMeQuery) {
-        return <div></div>
-    }
 
     const submit = (values) => {
         loginMutation({ variables: { email: values.email, password: values.password } })

@@ -1,6 +1,6 @@
 import React, { Fragment, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
-import { withRouter } from 'react-router-dom'
+import { withRouter, useHistory } from 'react-router-dom'
 import { useApolloClient, useQuery } from 'react-apollo'
 import { default as MUIAppBar } from '@material-ui/core/AppBar'
 
@@ -29,19 +29,24 @@ import { useTranslation } from 'react-i18next'
 import { logoutQuery, meQuery } from 'ROOT/services/graphql/auth.graphql'
 import { useMutation } from '@apollo/react-hooks'
 import ReactJoyride from 'react-joyride'
+import constants from 'ROOT/routes'
 
 const AppBar = (props) => {
 
     const { classes } = props
     const { t } = useTranslation('appBar')
     const client = useApolloClient()
+    const history = useHistory()
 
     const [logoutMutation] = useMutation(logoutQuery, {
         onCompleted: async (data) => {
-            await client.resetStore()
+            localStorage.clear()
+            await client.clearStore()
+            history.push(constants.PRIVATE_DASHBOARD)
         },
         onError: async (error) => {
-            await client.resetStore()
+            localStorage.clear()
+            await client.clearStore()
         }
     })
 

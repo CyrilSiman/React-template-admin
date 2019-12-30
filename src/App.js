@@ -8,15 +8,16 @@ import AppInitScene from 'ROOT/scenes/AppInit'
 import LoginScene from 'ROOT/scenes/Auth/scenes/Login'
 import LostPasswordScene from 'ROOT/scenes/Auth/scenes/LostPassword'
 import { useQuery } from '@apollo/react-hooks'
-import { connected } from 'ROOT/services/graphql/localState.graphql'
 import {appConfiguredQuery} from 'ROOT/services/graphql/appConfig.graphql'
+
+import constants from 'ROOT/services/constants'
 
 function App () {
 
     const {data,loading} = useQuery(appConfiguredQuery)
 
     if(loading) {
-        return <div>Loading</div>
+        return <div>&nbsp;</div>
     }
 
     if(!loading && data && !data.appConfigured) {
@@ -36,30 +37,26 @@ function App () {
 }
 
 function NoMatch ({ ...rest }) {
-
-    const { data } = useQuery(connected)
     return (
         <Route
             {...rest}
-            render={props => {
-                return (data.isLoggedIn ? (
+            render={props =>
+                !!localStorage.getItem(constants.IS_AUTHENTICATED) ? (
                     <Redirect to={{ pathname: routes.PRIVATE_DASHBOARD, state: { from: props.location } }} />
                 ) : (
                     <Redirect to={{ pathname: routes.LOGIN, state: { from: props.location } }} />
-                ))
-            }
+                )
             }
         />
     )
 }
 
 function PrivateRoute ({ component: Component, ...rest }) {
-    const { data } = useQuery(connected)
     return (
         <Route
             {...rest}
             render={props =>
-                data.isLoggedIn ? (
+                !!localStorage.getItem(constants.IS_AUTHENTICATED) ? (
                     <Component {...props} />
                 ) : (
                     <Redirect to={{ pathname: routes.LOGIN, state: { from: props.location } }} />
