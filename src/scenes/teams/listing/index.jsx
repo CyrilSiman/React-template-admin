@@ -1,5 +1,8 @@
 import React, { Fragment, useState } from 'react'
 import { useMutation, useQuery } from '@apollo/react-hooks'
+import { useTranslation } from 'react-i18next'
+import { useSnackbar } from 'notistack'
+
 import {withStyles} from '@material-ui/styles'
 import { AgGridReact } from 'ag-grid-react'
 
@@ -16,22 +19,21 @@ import Zoom from '@material-ui/core/Zoom'
 import Divider from '@material-ui/core/Divider'
 import Grid from '@material-ui/core/Grid'
 
-import Link from 'ROOT/components/Link'
-
 import DeleteIcon from '@material-ui/icons/Delete'
 import RefreshIcon from '@material-ui/icons/Refresh'
 import IconButton from '@material-ui/core/IconButton'
 
 import CheckBoxCellRender from 'ROOT/components/agGrid/CheckboxCellRender'
 
+import Link from 'ROOT/components/Link'
 import CreateTeam from './components/create'
+
+import {capitalize} from 'ROOT/services/utils'
 
 import {teamsQuery, deteteTeamsMutation} from 'ROOT/services/graphql/teams.graphql'
 
 import routes from 'ROOT/routes'
 import styles from './styles'
-import { useTranslation } from 'react-i18next'
-import { useSnackbar } from 'notistack'
 
 const defaultColDef = {
     suppressMenu: true,
@@ -68,6 +70,9 @@ const columnDefs = (t,tGlobal) => [
         headerName: t('listing.column.name'),
         field: 'name',
         suppressSizeToFit: false,
+        valueFormatter: function (params) {
+            return capitalize(params.value)
+        },
         width: 130,
     },
     {

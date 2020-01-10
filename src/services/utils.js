@@ -21,3 +21,16 @@ export const hasError = (error,code) => {
     }
     return result
 }
+
+/**
+ * Capitalize text
+ * @param txt
+ * @returns {string}
+ */
+export const capitalize = (txt) => {
+    let result = ''
+    if(txt) {
+        result = txt.charAt(0).toUpperCase() + txt.slice(1)
+    }
+    return result
+}
