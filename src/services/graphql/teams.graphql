@@ -16,3 +16,7 @@ mutation createTeam($name : String!) {
         updatedAt
     }
 }
+
+mutation deteteTeamsMutation($teamsId : [String]!) {
+    deleteTeams(teamsId:$teamsId)
+}

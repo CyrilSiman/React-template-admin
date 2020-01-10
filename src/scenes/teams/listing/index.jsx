@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react'
-import { useQuery } from '@apollo/react-hooks'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 import {withStyles} from '@material-ui/styles'
 import { AgGridReact } from 'ag-grid-react'
 
@@ -26,11 +26,12 @@ import CheckBoxCellRender from 'ROOT/components/agGrid/CheckboxCellRender'
 
 import CreateTeam from './components/create'
 
-import {teamsQuery} from 'ROOT/services/graphql/teams.graphql'
+import {teamsQuery, deteteTeamsMutation} from 'ROOT/services/graphql/teams.graphql'
 
 import routes from 'ROOT/routes'
 import styles from './styles'
 import { useTranslation } from 'react-i18next'
+import { useSnackbar } from 'notistack'
 
 const defaultColDef = {
     suppressMenu: true,
@@ -82,7 +83,26 @@ const columnDefs = (t,tGlobal) => [
 const Main = (props) => {
 
     const { classes } = props
+    const { enqueueSnackbar } = useSnackbar()
+    const {t:tError} = useTranslation('errors')
+
     const {data:dataTeams, loading: loadingTeams, error:errorTeams, refetch:refreshTeams} = useQuery(teamsQuery,{ errorPolicy: 'all' })
+    const [deleteTeamMutation] = useMutation(deteteTeamsMutation,{
+        onCompleted:() => {
+            setElementSelectedState({elementSelected:false,allSelected:false})
+        },
+        update : (cache, { data: { deleteTeams } }) => {
+            const {teams} = cache.readQuery({query: teamsQuery})
+            const filteredTeam = teams.filter(team => !deleteTeams.includes(team._id))
+            cache.writeQuery({
+                query: teamsQuery,
+                data: {teams:filteredTeam}
+            })
+        },
+        onError: (error) => {
+            enqueueSnackbar(tError('unknownError'),{variant:'error'})
+        }
+    })
     const [gridApi,setGridApi] = useState(null)
     const [elementSelectedState,setElementSelectedState] = useState({elementSelected:false,allSelected:false})
     const {t} = useTranslation('teams')
@@ -103,7 +123,11 @@ const Main = (props) => {
     }
 
     const deleteTeams = () => {
-        console.log('delete teams')
+        deleteTeamMutation({
+            variables:{
+                teamsId:gridApi.getSelectedNodes().map(node => node.data._id)
+            }
+        })
     }
 
     const onSelectionChange = (params) => {

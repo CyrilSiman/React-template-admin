@@ -41,14 +41,6 @@ const client = new ApolloClient({
     cache,
     resolvers: {},
     link: authenticatedError.concat(httpLink),
-    defaultOptions:{
-        query: {
-            errorPolicy: 'all',
-        },
-        mutate: {
-            errorPolicy: 'all',
-        },
-    }
 })
 
 client.onResetStore(() => {
