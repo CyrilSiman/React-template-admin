@@ -12,6 +12,8 @@ import Button from '@material-ui/core/Button'
 import JTextField from 'ROOT/components/InputForm/TextField'
 
 import styles from './styles'
+import { useMutation } from '@apollo/react-hooks'
+import {updateMyProfile} from 'ROOT/services/graphql/users.graphql'
 
 const InformationForm = (props) => {
 
@@ -19,8 +21,14 @@ const InformationForm = (props) => {
     const {t} = useTranslation('profile')
     const {t:tError} = useTranslation('errors')
 
-    const submitForm = (values) => {
+    const [updateMyProfileMutation] = useMutation(updateMyProfile)
 
+    const submitForm = (values) => {
+        updateMyProfileMutation({variables:{
+                email:values.email,
+                lastName:values.lastName,
+                firstName:values.firstName
+            }})
     }
 
     return (

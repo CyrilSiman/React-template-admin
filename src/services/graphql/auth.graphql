@@ -16,6 +16,7 @@ mutation sendResetPasswordLink($email: String!) {
 
 query meQuery {
     me {
+        _id,
         email,
         lastName,
         firstName,

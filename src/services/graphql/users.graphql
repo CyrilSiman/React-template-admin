@@ -7,3 +7,12 @@ query usersQuery {
         firstName,
     }
 }
+
+mutation updateMyProfile ($lastName:String!,$firstName:String!,$email:String!){
+    updateMyProfile(lastName: $lastName,firstName: $firstName,email: $email) {
+        _id,
+        lastName,
+        firstName,
+        email
+    }
+}
