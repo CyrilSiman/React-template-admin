@@ -1,6 +1,8 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { withStyles } from '@material-ui/core'
+import { useMutation } from '@apollo/react-hooks'
+import { useSnackbar } from 'notistack'
 
 import { Field, Form } from 'react-final-form'
 
@@ -11,21 +13,54 @@ import Button from '@material-ui/core/Button'
 
 import JTextField from 'ROOT/components/InputForm/TextField'
 
+import { updateMyPassword } from 'ROOT/services/graphql/users.graphql'
 import styles from './styles'
+
+import { hasError } from 'ROOT/services/utils'
+import constants from 'ROOT/services/constants'
+
 
 const PasswordForm = (props) => {
 
     const { classes} = props
+    const { enqueueSnackbar } = useSnackbar()
     const {t} = useTranslation('profile')
     const {t:tError} = useTranslation('errors')
 
-    const submitForm = (values) => {
-        console.log(values)
+    const [updateMyPasswordMutation] = useMutation(updateMyPassword)
+
+    /*
+    ,{
+        onError:(error) => {
+            if(hasError(error,constants.ERROR_CODE_PASSWORD_DONT_MATCH)) {
+                enqueueSnackbar(tError('passwordDoesntMatch'),{variant:'error'})
+            } else {
+                enqueueSnackbar(tError('unknownError'),{variant:'error'})
+            }
+        }
+    }
+     */
+
+    const submitForm = async (values,form) => {
+        try {
+            await updateMyPasswordMutation({variables:{
+                    oldPassword:values.oldPassword,
+                    newPassword:values.password,
+                }})
+            enqueueSnackbar(t('passwordChanged'),{variant:'success'})
+            setTimeout(form.reset)
+        } catch (error) {
+            if(hasError(error,constants.ERROR_CODE_PASSWORD_DONT_MATCH)) {
+                return { oldPassword: tError('passwordDoesntMatch') }
+            } else {
+                enqueueSnackbar(tError('unknownError'),{variant:'error'})
+            }
+        }
     }
 
     return (
         <Form
-            onSubmit={(values) => submitForm(values)}
+            onSubmit={(values,form) => submitForm(values,form)}
             validate={(values) => {
                 const errors = {}
                 errors.oldPassword = validator(values.oldPassword,tError, required)

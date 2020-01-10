@@ -14,14 +14,20 @@ import JTextField from 'ROOT/components/InputForm/TextField'
 import styles from './styles'
 import { useMutation } from '@apollo/react-hooks'
 import {updateMyProfile} from 'ROOT/services/graphql/users.graphql'
+import { useSnackbar } from 'notistack'
 
 const InformationForm = (props) => {
 
     const { classes, me} = props
+    const { enqueueSnackbar } = useSnackbar()
     const {t} = useTranslation('profile')
     const {t:tError} = useTranslation('errors')
 
-    const [updateMyProfileMutation] = useMutation(updateMyProfile)
+    const [updateMyProfileMutation] = useMutation(updateMyProfile,{
+        onError:() => {
+            enqueueSnackbar(tError('unknownError'),{variant:'error'})
+        }
+    })
 
     const submitForm = (values) => {
         updateMyProfileMutation({variables:{

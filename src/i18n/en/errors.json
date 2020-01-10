@@ -9,5 +9,6 @@
     "lowerThan" : "Should be greater than {{max}}"
   },
   "unknownError": "Sorry a error happen, contact technical support",
-  "teamDuplicate": "Sorry, this team name already exist"
+  "teamDuplicate": "Sorry, this team name already exist",
+  "passwordDoesntMatch": "The current password isn't correct."
 }

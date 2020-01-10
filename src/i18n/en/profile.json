@@ -1,6 +1,7 @@
 {
   "dialogTitle": "Profile",
   "changeYourPassword": "Change password",
+  "passwordChanged": "Password changed",
   "field" : {
     "lastName": "Last name",
     "firstName": "First name",

@@ -16,3 +16,7 @@ mutation updateMyProfile ($lastName:String!,$firstName:String!,$email:String!){
         email
     }
 }
+
+mutation updateMyPassword ($oldPassword:String!,$newPassword:String!){
+    updateMyPassword(oldPassword:$oldPassword,newPassword:$newPassword)
+}
