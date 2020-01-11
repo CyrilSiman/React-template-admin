@@ -29,18 +29,6 @@ const PasswordForm = (props) => {
 
     const [updateMyPasswordMutation] = useMutation(updateMyPassword)
 
-    /*
-    ,{
-        onError:(error) => {
-            if(hasError(error,constants.ERROR_CODE_PASSWORD_DONT_MATCH)) {
-                enqueueSnackbar(tError('passwordDoesntMatch'),{variant:'error'})
-            } else {
-                enqueueSnackbar(tError('unknownError'),{variant:'error'})
-            }
-        }
-    }
-     */
-
     const submitForm = async (values,form) => {
         try {
             await updateMyPasswordMutation({variables:{
