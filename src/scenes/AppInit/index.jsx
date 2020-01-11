@@ -16,18 +16,18 @@ import WindowForm from 'ROOT/components/Window'
 import {createRootUserMutation} from 'ROOT/services/graphql/appConfig.graphql'
 
 import styles from './styles'
+import Alert from '@material-ui/lab/Alert'
 
 const AppInitScene = (props) => {
 
     let { classes } = props
-    let history = useHistory()
     const { enqueueSnackbar } = useSnackbar()
     const { t } = useTranslation('appInit')
 
     const [appInitMutation, { loading: mutationLoading }] = useMutation(createRootUserMutation, {
         onCompleted: (data) => {
             if(data.createRootUser){
-                history.push('/')
+                window.location='/'
             } else {
                 enqueueSnackbar(t('creationFailed'),{variant:'error'})
             }
@@ -42,7 +42,7 @@ const AppInitScene = (props) => {
     }
 
     return <WindowForm>
-        <Typography style={{margin:20}}>{t('message')}</Typography>
+        <Alert severity="error" className={classes.alert}>{t('message')}</Alert>
         <Form onSubmit={(values) => submit(values)}
               initialValues={{ secret:'', email: '', password: '' }}
               validate={values => {

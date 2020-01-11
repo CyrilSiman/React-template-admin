@@ -37,6 +37,7 @@ const LostPasswordScene = (props) => {
     const submit = async (values,form) => {
         try {
             await resetPassword({ variables: { password: values.email, token:token } })
+            setMessage('Congrats your email is changed')
             setTimeout(form.reset)
         } catch (error) {
             if(hasError(error,constants.ERROR_CODE_TOKEN_EXPIRED)) {
@@ -66,7 +67,7 @@ const LostPasswordScene = (props) => {
 
     return (<WindowForm >
 
-        {message && <Typography component='body2' color={'error'}>{message}</Typography>}
+        {message && <Alert severity="error" className={classes.alert}>{message}</Alert>}
         <Form onSubmit={(values,form) => submit(values,form)}
               validate={(values) => {
                   const errors = {}
