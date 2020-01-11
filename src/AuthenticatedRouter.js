@@ -7,9 +7,12 @@ import LeftSideMenu from 'ROOT/components/LeftSideMenu'
 import DashboardScene from 'ROOT/scenes/Dashboard'
 import UsersScene from 'ROOT/scenes/users/listing'
 import TeamsScene from 'ROOT/scenes/teams/listing'
+import EmailsScene from 'ROOT/scenes/emails/listing'
 
 import PeopleIcon from '@material-ui/icons/People'
-import { AlertCircle, AccountCardDetails } from 'mdi-material-ui'
+import AlertCircle from 'mdi-material-ui/AlertCircle'
+import AccountCardDetails from 'mdi-material-ui/AccountCardDetails'
+import Emails from 'mdi-material-ui/Email'
 
 const navigation = [
     {
@@ -23,6 +26,7 @@ const navigation = [
         id: 'Configuration',
         children: [
             { id: 'Role', icon: <AlertCircle />, active: false, path: routes.PRIVATE_CONFIG_PAGE_ONE },
+            { id: 'Emails', icon: <Emails />, active: false, path: routes.PRIVATE_EMAILS },
         ]
     }
 ]
@@ -37,6 +41,7 @@ const AuthenticatedRouter = () => {
                         <Route component={DashboardScene} path={routes.PRIVATE_DASHBOARD} />
                         <Route component={TeamsScene} path={routes.PRIVATE_TEAMS} />
                         <Route component={UsersScene} path={routes.PRIVATE_USERS} />
+                        <Route component={EmailsScene} path={routes.PRIVATE_EMAILS} />
                         <Route component={defaultRedirect(routes.PRIVATE_DASHBOARD)} />
                     </Switch>
             </LeftSideMenu>

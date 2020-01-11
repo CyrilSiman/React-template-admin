@@ -9,6 +9,7 @@ const constants = {
     PRIVATE_DASHBOARD : '/app/dashboard',
 
     PRIVATE_USERS : '/app/users',
+    PRIVATE_EMAILS : '/app/emails',
     PRIVATE_TEAMS : '/app/teams',
 
     PRIVATE_CONFIG_PAGE_ONE : '/app/config/pageOne',

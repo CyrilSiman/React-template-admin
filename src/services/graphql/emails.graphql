@@ -1,0 +1,9 @@
+
+query emailsQuery {
+    emails {
+        _id,
+        sendAt,
+        sendTo,
+        status
+    }
+}
