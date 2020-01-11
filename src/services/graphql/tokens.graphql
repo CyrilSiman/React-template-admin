@@ -1,0 +1,8 @@
+
+query tokensQuery {
+    tokens {
+        _id,
+        type,
+        expiredAt,
+    }
+}
