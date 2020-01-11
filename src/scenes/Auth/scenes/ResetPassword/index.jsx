@@ -25,6 +25,7 @@ const LostPasswordScene = (props) => {
 
     let {classes} = props
     const [message,setMessage] = useState(null)
+    const [error,setError] = useState(null)
     const { t } = useTranslation('auth')
     const { t:tError } = useTranslation('errors')
     const { enqueueSnackbar } = useSnackbar()
@@ -35,15 +36,18 @@ const LostPasswordScene = (props) => {
 
     const submit = async (values,form) => {
         try {
-            await resetPassword({ variables: { password: values.email, token:token } })
-            setMessage('Congrats your email is changed')
+            await resetPassword({ variables: { newPassword: values.password, token:token } })
+            setMessage(t('congratsPasswordReset'))
+            setError(null)
             setTimeout(form.reset)
         } catch (error) {
             if(hasError(error,constants.ERROR_CODE_TOKEN_EXPIRED)) {
-                setMessage(tError(''))
+                setMessage(null)
+                setError(tError('tokenExpired'))
                 //console.log(constants.ERROR_CODE_TOKEN_EXPIRED)
             } else if(hasError(error,constants.ERROR_CODE_TOKEN_NOT_RECOGNIZED)) {
-                setMessage(tError(''))
+                setMessage(null)
+                setError(tError('tokenNotRecognized'))
                 //console.log(constants.ERROR_CODE_TOKEN_NOT_RECOGNIZED)
             } else {
                 enqueueSnackbar(tError('unknownError'),{variant:'error'})
@@ -55,7 +59,7 @@ const LostPasswordScene = (props) => {
         return null
     }
 
-    if(!loading && tokenStillValid && !tokenStillValid.resetPasswordTokenStillValid) {
+    if((!loading && tokenStillValid && !tokenStillValid.resetPasswordTokenStillValid) || error) {
         return <WindowForm >
             <Alert severity="error" className={classes.alert}>{tError('tokenExpired')}</Alert>
             <Button size='small' variant='contained' color='primary' component={Link} to='/lostPassword'  >
@@ -64,9 +68,16 @@ const LostPasswordScene = (props) => {
         </WindowForm>
     }
 
-    return (<WindowForm >
+    if(message) {
+        return <WindowForm >
+            <Alert severity='success' className={classes.alert}>{message}</Alert>
+            <Button size='small' className={classes.back} component={Link} to='/' startIcon={<ArrowBack />} >
+                {t('button.login')}
+            </Button>
+        </WindowForm>
+    }
 
-        {message && <Alert severity="error" className={classes.alert}>{message}</Alert>}
+    return (<WindowForm >
         <Form onSubmit={(values,form) => submit(values,form)}
               validate={(values) => {
                   const errors = {}
