@@ -2,8 +2,8 @@
 query emailsQuery {
     emails {
         _id,
-        sendAt,
-        sendTo,
+        sentAt,
+        sentTo,
         template {
             name
         }

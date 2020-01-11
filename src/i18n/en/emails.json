@@ -2,8 +2,8 @@
   "listing" : {
     "column" : {
       "id" : "UUID",
-      "sendAt" : "Sent at",
-      "sendTo" : "Sent to",
+      "sentAt" : "Sent at",
+      "sentTo" : "Sent to",
       "template" : "Template",
       "status" : "Status"
     }

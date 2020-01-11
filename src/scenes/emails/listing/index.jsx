@@ -39,16 +39,16 @@ const columnDefs = (t,tGlobal) => [
         width: 130,
     },
     {
-        headerName: t('listing.column.sendAt'),
-        field: 'sendAt',
+        headerName: t('listing.column.sentAt'),
+        field: 'sentAt',
         valueFormatter: function (params) {
             return format(new Date(params.value),tGlobal('date.format1'))
         },
         width: 130,
     },
     {
-        headerName: t('listing.column.sendTo'),
-        field: 'sendTo',
+        headerName: t('listing.column.sentTo'),
+        field: 'sentTo',
         width: 130,
     },
     {
