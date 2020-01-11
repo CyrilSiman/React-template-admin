@@ -1,5 +1,4 @@
 import React from 'react'
-import { useHistory } from 'react-router-dom'
 import { useSnackbar } from 'notistack'
 import { useMutation } from '@apollo/react-hooks'
 import { useTranslation } from 'react-i18next'
@@ -7,7 +6,6 @@ import { useTranslation } from 'react-i18next'
 import { Field, Form } from 'react-final-form'
 import withStyles from '@material-ui/core/styles/withStyles'
 
-import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import TextField from 'ROOT/components/InputForm/TextField'
 

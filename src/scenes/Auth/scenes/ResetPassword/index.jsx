@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import withStyles from '@material-ui/core/styles/withStyles'
 
 import Alert from '@material-ui/lab/Alert'
-import Typography from '@material-ui/core/Typography'
 import TextField from 'ROOT/components/InputForm/TextField'
 import Button from '@material-ui/core/Button/Button'
 import WindowForm from 'ROOT/components/Window'
@@ -56,7 +55,7 @@ const LostPasswordScene = (props) => {
         return null
     }
 
-    if(!loading && !tokenStillValid.resetPasswordTokenStillValid) {
+    if(!loading && tokenStillValid && !tokenStillValid.resetPasswordTokenStillValid) {
         return <WindowForm >
             <Alert severity="error" className={classes.alert}>{tError('tokenExpired')}</Alert>
             <Button size='small' variant='contained' color='primary' component={Link} to='/lostPassword'  >
