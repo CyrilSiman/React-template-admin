@@ -135,6 +135,13 @@ const Main = (props) => {
         })
     }
 
+    const showAddTeam = () => {
+        gridApi.deselectAll()
+        gridApi.refreshCells({force:true})
+        setElementSelectedState({elementSelected:false,allSelected:false})
+        setDialogCreateTeamOpened(true)
+    }
+
     const onSelectionChange = (params) => {
         const rowLength = gridApi.getModel().getRootNode().allLeafChildren.length
         const selectedRowLength = gridApi.getSelectedNodes().length
@@ -171,7 +178,7 @@ const Main = (props) => {
                         <Tooltip title={t('button.addTeam')}
                                  aria-label={t('button.addTeam')} placement="right">
                             <Fab color="primary" aria-label={t('button.addTeam')} className={classes.addButton}
-                                 onClick={() => setDialogCreateTeamOpened(true)} size="medium">
+                                 onClick={() => showAddTeam()} size="medium">
                                 <AddIcon/>
                             </Fab>
                         </Tooltip>
