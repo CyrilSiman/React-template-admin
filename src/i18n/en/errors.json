@@ -11,5 +11,7 @@
   "unknownError": "Sorry a error happen, contact technical support",
   "teamDuplicate": "Sorry, this team name already exist",
   "passwordDoesntMatch": "The current password isn't correct.",
-  "resetPasswordUserNotExist": "This email isn't recognized"
+  "resetPasswordUserNotExist": "This email isn't recognized",
+  "tokenExpired" : "Sorry this link expired, use the button below to receive a new email",
+  "tokenNotRecognized" : "Sorry this token expired, maybe have you used an expired email"
 }

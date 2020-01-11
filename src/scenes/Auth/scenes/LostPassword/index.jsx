@@ -4,7 +4,6 @@ import { useMutation } from '@apollo/react-hooks'
 import { useTranslation } from 'react-i18next'
 import withStyles from '@material-ui/core/styles/withStyles'
 
-import Typography from '@material-ui/core/Typography'
 import TextField from 'ROOT/components/InputForm/TextField'
 import Button from '@material-ui/core/Button/Button'
 import WindowForm from 'ROOT/components/Window'
@@ -19,6 +18,7 @@ import styles from './styles'
 import { hasError } from 'ROOT/services/utils'
 import constants from 'ROOT/services/constants'
 import { useSnackbar } from 'notistack'
+import Alert from '@material-ui/lab/Alert'
 
 const LostPasswordScene = (props) => {
 
@@ -46,7 +46,8 @@ const LostPasswordScene = (props) => {
     }
 
     return (<WindowForm >
-        {showInstruction && <Typography variant={'body1'}>{t('followInstructionInEmail')}</Typography>}
+        {showInstruction &&
+        <Alert severity="success" className={classes.alert}>{t('followInstructionInEmail')}</Alert>}
         <Form onSubmit={(values,form) => submit(values,form)}
               initialValues={{email: ''}}
               validate={values => {
