@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {Form, Field} from 'react-final-form'
 import { useMutation } from '@apollo/react-hooks'
 import { useTranslation } from 'react-i18next'
 import withStyles from '@material-ui/core/styles/withStyles'
 
+import Typography from '@material-ui/core/Typography'
 import TextField from 'ROOT/components/InputForm/TextField'
 import Button from '@material-ui/core/Button/Button'
 import WindowForm from 'ROOT/components/Window'
@@ -15,28 +16,38 @@ import ArrowBack from 'mdi-material-ui/ArrowLeft'
 import {sendResetPasswordLink} from 'ROOT/services/graphql/auth.graphql'
 
 import styles from './styles'
+import { hasError } from 'ROOT/services/utils'
+import constants from 'ROOT/services/constants'
+import { useSnackbar } from 'notistack'
 
 const LostPasswordScene = (props) => {
 
     let {classes} = props
+    const [showInstruction,setShowInstruction] = useState(false)
     const { t } = useTranslation('auth')
     const { t:tError } = useTranslation('errors')
+    const { enqueueSnackbar } = useSnackbar()
 
-    const [resetPasswordMutation] = useMutation(sendResetPasswordLink, {
-        onCompleted:(data) => {
-            if(data.lostPasswordMutation.sucess) {
+    const [resetPasswordMutation] = useMutation(sendResetPasswordLink)
+
+    const submit = async (values,form) => {
+        setShowInstruction(false)
+        try {
+            await resetPasswordMutation({ variables: { email: values.email } })
+            setTimeout(form.reset)
+            setShowInstruction(true)
+        } catch (error) {
+            if(hasError(error,constants.ERROR_CODE_USER_DONT_MATCH)) {
+                return { email: tError('resetPasswordUserNotExist') }
             } else {
+                enqueueSnackbar(tError('unknownError'),{variant:'error'})
             }
-        },
-        onError:() => {}
-    })
-
-    const submit = (values) => {
-        resetPasswordMutation({ variables: { email: values.email } })
+        }
     }
 
     return (<WindowForm >
-        <Form onSubmit={(values) => submit(values)}
+        {showInstruction && <Typography variant={'body1'}>{t('followInstructionInEmail')}</Typography>}
+        <Form onSubmit={(values,form) => submit(values,form)}
               initialValues={{email: ''}}
               validate={values => {
                   const errors = {}
