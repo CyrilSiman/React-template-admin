@@ -1,0 +1,11 @@
+{
+  "listing" : {
+    "column" : {
+      "id" : "UUID",
+      "sendAt" : "Sent at",
+      "sendTo" : "Sent to",
+      "template" : "Template",
+      "status" : "Status"
+    }
+  }
+}

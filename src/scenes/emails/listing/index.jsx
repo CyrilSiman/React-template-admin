@@ -1,6 +1,9 @@
 import React, { Fragment } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import {withStyles} from '@material-ui/styles'
+import { useTranslation } from 'react-i18next'
+
+import format from 'date-fns/format'
 
 import { AgGridReact } from 'ag-grid-react'
 
@@ -11,9 +14,8 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 
 import {emailsQuery} from 'ROOT/services/graphql/emails.graphql'
 import routes from 'ROOT/routes'
-
 import styles from './styles'
-import { useTranslation } from 'react-i18next'
+
 
 const defaultColDef = {
     suppressMenu: true,
@@ -30,7 +32,7 @@ const columnTypes = {
         },
     },
 }
-const columnDefs = (t) => [
+const columnDefs = (t,tGlobal) => [
     {
         headerName: t('listing.column.id'),
         field: '_id',
@@ -39,11 +41,24 @@ const columnDefs = (t) => [
     {
         headerName: t('listing.column.sendAt'),
         field: 'sendAt',
+        valueFormatter: function (params) {
+            return format(new Date(params.value),tGlobal('date.format1'))
+        },
         width: 130,
     },
     {
         headerName: t('listing.column.sendTo'),
         field: 'sendTo',
+        width: 130,
+    },
+    {
+        headerName: t('listing.column.template'),
+        field: 'template.name',
+        width: 130,
+    },
+    {
+        headerName: t('listing.column.status'),
+        field: 'status',
         width: 130,
     }
 ]
@@ -53,6 +68,7 @@ const Main = (props) => {
     const { classes } = props
     const {data:dataEmails, loading: loadingEmails, error:errorEmails} = useQuery(emailsQuery)
     const {t} = useTranslation('emails')
+    const {t:tGlobal} = useTranslation('global')
 
     return (
         <Fragment>
@@ -74,7 +90,7 @@ const Main = (props) => {
                          }}
                     >
                         <AgGridReact
-                            columnDefs={columnDefs(t)}
+                            columnDefs={columnDefs(t,tGlobal)}
                             defaultColDef={defaultColDef}
                             columnTypes={columnTypes}
                             rowData={errorEmails || loadingEmails ? null : dataEmails.emails}

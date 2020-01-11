@@ -90,6 +90,8 @@ const Main = (props) => {
     const { classes } = props
     const { enqueueSnackbar } = useSnackbar()
     const {t:tError} = useTranslation('errors')
+    const {t} = useTranslation('teams')
+    const {t:tGlobal} = useTranslation('global')
 
     const {data:dataTeams, loading: loadingTeams, error:errorTeams, refetch:refreshTeams} = useQuery(teamsQuery,{ errorPolicy: 'all' })
     const [deleteTeamMutation] = useMutation(deteteTeamsMutation,{
@@ -110,8 +112,6 @@ const Main = (props) => {
     })
     const [gridApi,setGridApi] = useState(null)
     const [elementSelectedState,setElementSelectedState] = useState({elementSelected:false,allSelected:false})
-    const {t} = useTranslation('teams')
-    const {t:tGlobal} = useTranslation('global')
     const [dialogCreateTeamOpened,setDialogCreateTeamOpened] = useState(false)
 
     const toggleSelectedAll = () => {

@@ -4,6 +4,9 @@ query emailsQuery {
         _id,
         sendAt,
         sendTo,
+        template {
+            name
+        }
         status
     }
 }

@@ -26,6 +26,11 @@ const navigation = [
         id: 'Configuration',
         children: [
             { id: 'Role', icon: <AlertCircle />, active: false, path: routes.PRIVATE_CONFIG_PAGE_ONE },
+        ]
+    },
+    {
+        id: 'System',
+        children: [
             { id: 'Emails', icon: <Emails />, active: false, path: routes.PRIVATE_EMAILS },
         ]
     }
