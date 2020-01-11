@@ -15,8 +15,13 @@ const styles = theme => ({
         marginTop: theme.spacing(8),
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
         padding: `${theme.spacing(2)}px ${theme.spacing(3)}px ${theme.spacing(3)}px`,
+    },
+    logoBox : {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        marginBottom: theme.spacing(2)
     },
     wrapperPage : {
         margin: '7.5% auto',

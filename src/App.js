@@ -7,6 +7,7 @@ import AuthenticatedRouter from 'ROOT/AuthenticatedRouter'
 import AppInitScene from 'ROOT/scenes/AppInit'
 import LoginScene from 'ROOT/scenes/Auth/scenes/Login'
 import LostPasswordScene from 'ROOT/scenes/Auth/scenes/LostPassword'
+import ResetPasswordScene from 'ROOT/scenes/Auth/scenes/ResetPassword'
 import { useQuery } from '@apollo/react-hooks'
 import {appConfiguredQuery} from 'ROOT/services/graphql/appConfig.graphql'
 
@@ -29,6 +30,7 @@ function App () {
             <Switch>
                 <Route component={LoginScene} path={routes.LOGIN} />
                 <Route component={LostPasswordScene} path={routes.LOST_PASSWORD} />
+                <Route component={ResetPasswordScene} path={routes.RESET_PASSWORD} />
                 <PrivateRoute component={AuthenticatedRouter} path={routes.PRIVATE_DEFAULT} />
                 <Route component={NoMatch} />
             </Switch>

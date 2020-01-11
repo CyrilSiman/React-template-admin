@@ -4,9 +4,6 @@ const styles = theme => ({
         marginTop: theme.spacing(3),
         marginBottom: theme.spacing(3)
     },
-    leftIcon: {
-        marginRight: theme.spacing(1),
-    },
     form: {
         width: '100%', // Fix IE 11 issue.
         marginTop: theme.spacing(1),

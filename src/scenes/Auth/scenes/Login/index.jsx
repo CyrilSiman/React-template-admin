@@ -52,7 +52,7 @@ const LoginScene = (props) => {
         }
     }
 
-    return <WindowForm>
+    return <WindowForm title>
         {message}
         <Form onSubmit={(values) => submit(values)}
               initialValues={{ email: '', password: '' }}
@@ -83,8 +83,7 @@ const LoginScene = (props) => {
                       <Button fullWidth variant='contained' color='primary' type='submit'
                               className={classes.submit}>{t('button.login')}</Button>
                       }
-                      <Button size='small' className={classes.lostPassword} component={Link} to='/lostPassword'>
-                          <LockQuestion className={classes.leftIcon} />
+                      <Button size='small' className={classes.lostPassword} component={Link} to='/lostPassword' startIcon={<LockQuestion />}>
                           {t('lostPassword')}
                       </Button>
                   </form>

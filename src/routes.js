@@ -2,6 +2,7 @@
 const constants = {
 
     LOST_PASSWORD : '/lostPassword',
+    RESET_PASSWORD : '/resetPasswordToken/:token',
     LOGIN : '/login',
 
     PRIVATE_DEFAULT : '/app',
