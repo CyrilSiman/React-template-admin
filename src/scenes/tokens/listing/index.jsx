@@ -39,8 +39,8 @@ const columnDefs = (t,tGlobal) => [
         width: 130,
     },
     {
-        headerName: t('listing.column.expireAt'),
-        field: 'sentAt',
+        headerName: t('listing.column.expiredAt'),
+        field: 'expiredAt',
         valueFormatter: function (params) {
             return format(new Date(params.value),tGlobal('date.format1'))
         },
@@ -48,7 +48,7 @@ const columnDefs = (t,tGlobal) => [
     },
     {
         headerName: t('listing.column.type'),
-        field: 'sentTo',
+        field: 'type',
         width: 130,
     }
 ]
