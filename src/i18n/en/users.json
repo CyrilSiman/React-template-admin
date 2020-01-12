@@ -3,7 +3,8 @@
     "column" : {
       "id" : "UUID",
       "lastname" : "Last Name",
-      "firstname" : "First Name"
+      "firstname" : "First Name",
+      "isAdmin": "Is Admin"
     }
   }
 }

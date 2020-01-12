@@ -13,11 +13,14 @@ import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
 import Box from '@material-ui/core/Box'
 
+import CheckCellRender from 'ROOT/components/agGrid/CheckCellRender'
+
 import {usersQuery} from 'ROOT/services/graphql/users.graphql'
 import routes from 'ROOT/routes'
 
 import styles from './styles'
 import { useTranslation } from 'react-i18next'
+
 
 const defaultColDef = {
     suppressMenu: true,
@@ -51,13 +54,10 @@ const columnDefs = (t) => [
         width: 130,
     },
     {
-        headerName: 'Type',
-        field: 'client_type_rid',
+        headerName: t('listing.column.isAdmin'),
+        field: 'isAdmin',
+        cellRenderer: 'checkCellRender',
     },
-    {
-        headerName: 'Statut',
-        field: 'clientStatus',
-    }
 ]
 
 const Main = (props) => {
@@ -115,6 +115,9 @@ const Main = (props) => {
                             onGridReady={(params) => params.api.sizeColumnsToFit()}
                             onGridSizeChanged={(params) => {
                                 params.api.sizeColumnsToFit()
+                            }}
+                            frameworkComponents={{
+                                checkCellRender: CheckCellRender
                             }}
                         />
                     </div>

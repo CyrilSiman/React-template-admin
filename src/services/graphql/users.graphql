@@ -5,6 +5,7 @@ query usersQuery {
         email,
         lastName,
         firstName,
+        isAdmin,
     }
 }
 
