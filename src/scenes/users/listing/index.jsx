@@ -1,6 +1,5 @@
 import React, { Fragment, useState } from 'react'
-import { useQuery } from '@apollo/react-hooks'
-import {withStyles} from '@material-ui/styles'
+import { useQuery } from '@apollo/client'
 
 import { AgGridReact } from 'ag-grid-react'
 
@@ -15,10 +14,10 @@ import Box from '@material-ui/core/Box'
 
 import CheckCellRender from 'ROOT/components/agGrid/CheckCellRender'
 
-import {usersQuery} from 'ROOT/services/graphql/users.graphql'
+import { usersQuery } from 'ROOT/services/graphql/users.graphql'
 import routes from 'ROOT/routes'
 
-import styles from './styles'
+import useStyles from './styles'
 import { useTranslation } from 'react-i18next'
 
 
@@ -32,8 +31,8 @@ const defaultColDef = {
 }
 const columnTypes = {
     'statusStyle': {
-        cellStyle: (params) => {
-            return {textAlign: 'center', backgroundColor: '#f5f5f5'}
+        cellStyle: () => {
+            return { textAlign: 'center', backgroundColor: '#f5f5f5' }
         },
     },
 }
@@ -60,16 +59,16 @@ const columnDefs = (t) => [
     },
 ]
 
-const Main = (props) => {
+const Main = () => {
 
-    const { classes } = props
-    const {data:dataUsers, loading: loadingUsers, error:errorUsers} = useQuery(usersQuery)
-    const {t} = useTranslation('users')
+    const classes = useStyles()
+    const { data:dataUsers, loading: loadingUsers, error:errorUsers } = useQuery(usersQuery)
+    const { t } = useTranslation('users')
     const [,setDialogCreateUserOpened] = useState(false)
 
     return (
         <Fragment>
-            {loadingUsers ? <LinearProgress/> : <div style={{height: '4px'}}></div>}
+            {loadingUsers ? <LinearProgress /> : <div style={{ height: '4px' }}></div>}
             <div className={classes.content}>
                 <Breadcrumbs aria-label="breadcrumb">
                     <Link color="inherit" to={routes.PRIVATE_DASHBOARD}>
@@ -82,20 +81,20 @@ const Main = (props) => {
                 <Paper className={classes.tablePaper}>
                     <Box display="flex" flexDirection="row-reverse">
                         <Tooltip title="Inviter un prescripteur"
-                                 aria-label="Inviter un prescripteur" placement="right">
+                            aria-label="Inviter un prescripteur" placement="right">
                             <Fab color="primary" aria-label="Add" className={classes.addButton}
-                                 onClick={() => setDialogCreateUserOpened(true)} size="medium">
-                                <AddIcon/>
+                                onClick={() => setDialogCreateUserOpened(true)} size="medium">
+                                <AddIcon />
                             </Fab>
                         </Tooltip>
                     </Box>
 
 
                     <div id="myGrid"
-                         className="ag-theme-material"
-                         style={{
-                             height: '553px', width: '100%', padding: 8 * 3
-                         }}
+                        className="ag-theme-material"
+                        style={{
+                            height: '553px', width: '100%', padding: 8 * 3,
+                        }}
                     >
                         <AgGridReact
                             columnDefs={columnDefs(t)}
@@ -109,7 +108,7 @@ const Main = (props) => {
                             pagination={true}
                             paginationAutoPageSize={true}
                             rowHeight={40}
-                            rowSelection='single'
+                            rowSelection="single"
                             headerHeight={40}
                             floatingFiltersHeight={40}
                             onGridReady={(params) => params.api.sizeColumnsToFit()}
@@ -117,7 +116,7 @@ const Main = (props) => {
                                 params.api.sizeColumnsToFit()
                             }}
                             frameworkComponents={{
-                                checkCellRender: CheckCellRender
+                                checkCellRender: CheckCellRender,
                             }}
                         />
                     </div>
@@ -128,16 +127,4 @@ const Main = (props) => {
     )
 }
 
-/*
-<Breadcrumbs aria-label="breadcrumb">
-                <Link color="inherit" href="/" onClick={() => console.log('la')}>
-                    MyApp
-                </Link>
-                <Link color="inherit" href="/getting-started/installation/" onClick={() => console.log('la')}>
-                    Main
-                </Link>
-                <Typography color="textPrimary" style={{fontSize:13}}>Page One</Typography>
-            </Breadcrumbs>
- */
-
-export default withStyles(styles)(Main)
+export default Main

@@ -1,7 +1,7 @@
 import React, { Fragment, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { withRouter, useHistory } from 'react-router-dom'
-import { useApolloClient, useQuery } from 'react-apollo'
+import { useApolloClient, useQuery } from '@apollo/client'
 import { default as MUIAppBar } from '@material-ui/core/AppBar'
 
 import Avatar from '@material-ui/core/Avatar'
@@ -23,37 +23,37 @@ import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew'
 
 import Profile from 'ROOT/scenes/profile'
 
-import { withStyles } from '@material-ui/core/styles'
-import styles from './styles'
+import useStyles from './styles'
 import { useTranslation } from 'react-i18next'
 import { logoutQuery, meQuery } from 'ROOT/services/graphql/auth.graphql'
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation } from '@apollo/client'
 import ReactJoyride from 'react-joyride'
 import constants from 'ROOT/routes'
+import { showLeftMenuVar } from 'ROOT/services/AppApolloClient'
 
-const AppBar = (props) => {
+const AppBar = () => {
 
-    const { classes } = props
+    const classes = useStyles()
     const { t } = useTranslation('appBar')
     const client = useApolloClient()
     const history = useHistory()
 
     const [logoutMutation] = useMutation(logoutQuery, {
-        onCompleted: async (data) => {
+        onCompleted: async () => {
             localStorage.clear()
             await client.clearStore()
             history.push(constants.PRIVATE_DASHBOARD)
         },
-        onError: async (error) => {
+        onError: async () => {
             localStorage.clear()
             await client.clearStore()
-        }
+        },
     })
 
     const { loading: loadingMe, data: dataMe } = useQuery(meQuery, {
         onError: () => {
             logoutMutation()
-        }
+        },
     })
 
     const [menuOpen, setMenuOpen] = useState(false)
@@ -63,7 +63,7 @@ const AppBar = (props) => {
     const anchorEl = useRef(null)
 
     const toggleLeftMenu = () => {
-        client.writeData({ data: { showLeftMenu: true } })
+        showLeftMenuVar(true)
     }
 
     const twoLetterFromName = (lastName, firstName) => {
@@ -99,27 +99,27 @@ const AppBar = (props) => {
                         //textColor: '#004a14',
                         //width: 900,
                         zIndex: 2000,
-                    }
+                    },
                 }}
                 floaterProps={{
                     disableAnimation:true,
                 }}
                 steps={
-                [
-                    {
-                        target: '.joyride-step1',
-                        content: 'This is my awesome feature!',
-                        disableBeacon : true,
-                        placement : 'right'
-                    },
-                    {
-                        target: '.joyride-step2',
-                        content: 'This another awesome feature!',
-                        placement : 'right',
-                        disableBeacon : true
-                    },
-                ]
-            } />}
+                    [
+                        {
+                            target: '.joyride-step1',
+                            content: 'This is my awesome feature!',
+                            disableBeacon : true,
+                            placement : 'right',
+                        },
+                        {
+                            target: '.joyride-step2',
+                            content: 'This another awesome feature!',
+                            placement : 'right',
+                            disableBeacon : true,
+                        },
+                    ]
+                } />}
             <MUIAppBar color="primary" position="sticky" elevation={2} className={classes.header}>
                 <Toolbar>
                     <Grid container spacing={1} alignItems="center">
@@ -153,15 +153,15 @@ const AppBar = (props) => {
                         </Grid>
                         <Grid item>
                             <IconButton ref={anchorEl} color="inherit" className={classes.iconButtonAvatar}
-                                        onClick={() => setMenuOpen(true)}>
+                                onClick={() => setMenuOpen(true)}>
                                 <Avatar className={classes.avatar}>
-                                    {!loadingMe && dataMe && twoLetterFromName(dataMe.me.firstName, dataMe.me.lastName,)}
+                                    {!loadingMe && dataMe && twoLetterFromName(dataMe.me.firstName, dataMe.me.lastName)}
                                 </Avatar>
                             </IconButton>
                         </Grid>
                     </Grid>
                     <Menu
-                        id='menu-appbar'
+                        id="menu-appbar"
                         anchorEl={anchorEl.current}
                         anchorOrigin={{
                             vertical: 'top',
@@ -177,7 +177,7 @@ const AppBar = (props) => {
                         <MenuItem onClick={() => {
                             setMenuOpen(false)
                             setProfileOpen(true)
-                            }
+                        }
                         }>
                             <ListItemIcon className={classes.icon}>
                                 <PermIdentity />
@@ -201,4 +201,4 @@ AppBar.propTypes = {
     classes: PropTypes.object.isRequired,
 }
 
-export default withRouter(withStyles(styles)(AppBar))
+export default withRouter(AppBar)

@@ -1,9 +1,8 @@
 import React, { Fragment, useState } from 'react'
-import { useMutation, useQuery } from '@apollo/react-hooks'
+import { useMutation, useQuery } from '@apollo/client'
 import { useTranslation } from 'react-i18next'
 import { useSnackbar } from 'notistack'
 
-import {withStyles} from '@material-ui/styles'
 import { AgGridReact } from 'ag-grid-react'
 
 import format from 'date-fns/format'
@@ -28,12 +27,12 @@ import CheckBoxCellRender from 'ROOT/components/agGrid/CheckboxCellRender'
 import Link from 'ROOT/components/Link'
 import CreateTeam from './components/create'
 
-import {capitalize} from 'ROOT/services/utils'
+import { capitalize } from 'ROOT/services/utils'
 
-import {teamsQuery, deteteTeamsMutation} from 'ROOT/services/graphql/teams.graphql'
+import { teamsQuery, deteteTeamsMutation } from 'ROOT/services/graphql/teams.graphql'
 
 import routes from 'ROOT/routes'
-import styles from './styles'
+import useStyles from './styles'
 
 const defaultColDef = {
     suppressMenu: true,
@@ -45,8 +44,8 @@ const defaultColDef = {
 }
 const columnTypes = {
     'statusStyle': {
-        cellStyle: (params) => {
-            return {textAlign: 'center', backgroundColor: '#f5f5f5'}
+        cellStyle: () => {
+            return { textAlign: 'center', backgroundColor: '#f5f5f5' }
         },
     },
 }
@@ -85,34 +84,36 @@ const columnDefs = (t,tGlobal) => [
     },
 ]
 
-const Main = (props) => {
+const TeamListing = () => {
 
-    const { classes } = props
+    const classes = useStyles()
     const { enqueueSnackbar } = useSnackbar()
-    const {t:tError} = useTranslation('errors')
-    const {t} = useTranslation('teams')
-    const {t:tGlobal} = useTranslation('global')
+    const { t:tError } = useTranslation('errors')
+    const { t } = useTranslation('teams')
+    const { t:tGlobal } = useTranslation('global')
 
-    const {data:dataTeams, loading: loadingTeams, error:errorTeams, refetch:refreshTeams} = useQuery(teamsQuery,{ errorPolicy: 'all' })
+    const { data:dataTeams, loading: loadingTeams, error:errorTeams, refetch:refreshTeams } = useQuery(teamsQuery,{ errorPolicy: 'all' })
+
+    const [gridApi,setGridApi] = useState(null)
+    const [elementSelectedState,setElementSelectedState] = useState({ elementSelected:false,allSelected:false })
+    const [dialogCreateTeamOpened,setDialogCreateTeamOpened] = useState(false)
+
     const [deleteTeamMutation] = useMutation(deteteTeamsMutation,{
         onCompleted:() => {
-            setElementSelectedState({elementSelected:false,allSelected:false})
+            setElementSelectedState({ elementSelected:false,allSelected:false })
         },
         update : (cache, { data: { deleteTeams } }) => {
-            const {teams} = cache.readQuery({query: teamsQuery})
+            const { teams } = cache.readQuery({ query: teamsQuery })
             const filteredTeam = teams.filter(team => !deleteTeams.includes(team._id))
             cache.writeQuery({
                 query: teamsQuery,
-                data: {teams:filteredTeam}
+                data: { teams:filteredTeam },
             })
         },
-        onError: (error) => {
-            enqueueSnackbar(tError('unknownError'),{variant:'error'})
-        }
+        onError: () => {
+            enqueueSnackbar(tError('unknownError'),{ variant:'error' })
+        },
     })
-    const [gridApi,setGridApi] = useState(null)
-    const [elementSelectedState,setElementSelectedState] = useState({elementSelected:false,allSelected:false})
-    const [dialogCreateTeamOpened,setDialogCreateTeamOpened] = useState(false)
 
     const toggleSelectedAll = () => {
 
@@ -124,30 +125,30 @@ const Main = (props) => {
                 gridApi.selectAllFiltered()
             }
         }
-        gridApi.refreshCells({force:true})
+        gridApi.refreshCells({ force:true })
     }
 
     const deleteTeams = () => {
         deleteTeamMutation({
             variables:{
-                teamsId:gridApi.getSelectedNodes().map(node => node.data._id)
-            }
+                teamsId:gridApi.getSelectedNodes().map(node => node.data._id),
+            },
         })
     }
 
     const showAddTeam = () => {
         gridApi.deselectAll()
-        gridApi.refreshCells({force:true})
-        setElementSelectedState({elementSelected:false,allSelected:false})
+        gridApi.refreshCells({ force:true })
+        setElementSelectedState({ elementSelected:false,allSelected:false })
         setDialogCreateTeamOpened(true)
     }
 
-    const onSelectionChange = (params) => {
+    const onSelectionChange = () => {
         const rowLength = gridApi.getModel().getRootNode().allLeafChildren.length
         const selectedRowLength = gridApi.getSelectedNodes().length
         const newState = {
             elementSelected:false,
-            allSelected:false
+            allSelected:false,
         }
         if(selectedRowLength>0) {
             newState.elementSelected = true
@@ -162,7 +163,7 @@ const Main = (props) => {
 
     return (
         <Fragment>
-            {loadingTeams ? <LinearProgress/> : <div style={{height: '4px'}}></div>}
+            {loadingTeams ? <LinearProgress /> : <div style={{ height: '4px' }}></div>}
             {dialogCreateTeamOpened && <CreateTeam onClose={() => setDialogCreateTeamOpened(false)} />}
             <div className={classes.content}>
                 <Breadcrumbs aria-label="breadcrumb">
@@ -176,41 +177,41 @@ const Main = (props) => {
                 <Paper className={classes.tablePaper}>
                     <Box display="flex" flexDirection="row-reverse">
                         <Tooltip title={t('button.addTeam')}
-                                 aria-label={t('button.addTeam')} placement="right">
+                            aria-label={t('button.addTeam')} placement="right">
                             <Fab color="primary" aria-label={t('button.addTeam')} className={classes.addButton}
-                                 onClick={() => showAddTeam()} size="medium">
-                                <AddIcon/>
+                                onClick={() => showAddTeam()} size="medium">
+                                <AddIcon />
                             </Fab>
                         </Tooltip>
                     </Box>
                     <Grid container >
                         <Tooltip title={t('button.selectAll')} onClick={() => toggleSelectedAll()}
-                                 aria-label={t('button.selectAll')} placement="bottom">
-                        <Checkbox indeterminate={elementSelectedState.elementSelected && !elementSelectedState.allSelected} checked={elementSelectedState.elementSelected} style={{marginLeft:15}} />
+                            aria-label={t('button.selectAll')} placement="bottom">
+                            <Checkbox indeterminate={elementSelectedState.elementSelected && !elementSelectedState.allSelected} checked={elementSelectedState.elementSelected} style={{ marginLeft:15 }} />
                         </Tooltip>
-                        <Divider orientation="vertical" className={classes.vDivider}/>
+                        <Divider orientation="vertical" className={classes.vDivider} />
                         {!elementSelectedState.elementSelected &&
                         <Zoom in={true}>
-                        <Tooltip title={t('button.refresh')}
-                                 aria-label={t('button.refresh')} placement="bottom">
-                        <IconButton aria-label="refresh" className={classes.margin} onClick={() => refreshTeams()}>
-                            <RefreshIcon fontSize="inherit" />
-                        </IconButton>
-                        </Tooltip></Zoom>}
+                            <Tooltip title={t('button.refresh')}
+                                aria-label={t('button.refresh')} placement="bottom">
+                                <IconButton aria-label="refresh" className={classes.margin} onClick={() => refreshTeams()}>
+                                    <RefreshIcon fontSize="inherit" />
+                                </IconButton>
+                            </Tooltip></Zoom>}
                         {elementSelectedState.elementSelected &&
                         <Zoom in={true}>
-                        <Tooltip title={t('button.delete')}
-                                 aria-label={t('button.refresh')} placement="bottom">
-                            <IconButton aria-label="delete" className={classes.margin} onClick={() => deleteTeams()}>
-                                <DeleteIcon fontSize="inherit" />
-                            </IconButton>
-                        </Tooltip></Zoom>}
+                            <Tooltip title={t('button.delete')}
+                                aria-label={t('button.refresh')} placement="bottom">
+                                <IconButton aria-label="delete" className={classes.margin} onClick={() => deleteTeams()}>
+                                    <DeleteIcon fontSize="inherit" />
+                                </IconButton>
+                            </Tooltip></Zoom>}
                     </Grid>
                     <div id="myGrid"
-                         className="ag-theme-material"
-                         style={{
-                             height: '553px', width: '100%'
-                         }}
+                        className="ag-theme-material"
+                        style={{
+                            height: '553px', width: '100%',
+                        }}
                     >
                         <AgGridReact
                             columnDefs={columnDefs(t,tGlobal)}
@@ -224,7 +225,7 @@ const Main = (props) => {
                             pagination={true}
                             paginationAutoPageSize={true}
                             rowHeight={40}
-                            rowSelection='multiple'
+                            rowSelection="multiple"
                             headerHeight={40}
                             floatingFiltersHeight={40}
                             onSelectionChanged={(params) => onSelectionChange(params)}
@@ -236,7 +237,7 @@ const Main = (props) => {
                                 params.api.sizeColumnsToFit()
                             }}
                             frameworkComponents={{
-                                checkBoxCellRender: CheckBoxCellRender
+                                checkBoxCellRender: CheckBoxCellRender,
                             }}
                         />
                     </div>
@@ -246,4 +247,4 @@ const Main = (props) => {
     )
 }
 
-export default withStyles(styles)(Main)
+export default TeamListing

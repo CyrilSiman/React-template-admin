@@ -1,7 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { withStyles } from '@material-ui/core'
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation } from '@apollo/client'
 import { useSnackbar } from 'notistack'
 
 import { Field, Form } from 'react-final-form'
@@ -14,34 +13,34 @@ import Button from '@material-ui/core/Button'
 import JTextField from 'ROOT/components/InputForm/TextField'
 
 import { updateMyPassword } from 'ROOT/services/graphql/users.graphql'
-import styles from './styles'
+import useStyles from './styles'
 
 import { hasError } from 'ROOT/services/utils'
 import constants from 'ROOT/services/constants'
 
 
-const PasswordForm = (props) => {
+const PasswordForm = () => {
 
-    const { classes} = props
+    const classes = useStyles()
     const { enqueueSnackbar } = useSnackbar()
-    const {t} = useTranslation('profile')
-    const {t:tError} = useTranslation('errors')
+    const { t } = useTranslation('profile')
+    const { t:tError } = useTranslation('errors')
 
     const [updateMyPasswordMutation] = useMutation(updateMyPassword)
 
     const submitForm = async (values,form) => {
         try {
-            await updateMyPasswordMutation({variables:{
-                    oldPassword:values.oldPassword,
-                    newPassword:values.password,
-                }})
-            enqueueSnackbar(t('passwordChanged'),{variant:'success'})
+            await updateMyPasswordMutation({ variables:{
+                oldPassword:values.oldPassword,
+                newPassword:values.password,
+            } })
+            enqueueSnackbar(t('passwordChanged'),{ variant:'success' })
             setTimeout(form.reset)
         } catch (error) {
             if(hasError(error,constants.ERROR_CODE_PASSWORD_DONT_MATCH)) {
                 return { oldPassword: tError('passwordDoesntMatch') }
             } else {
-                enqueueSnackbar(tError('unknownError'),{variant:'error'})
+                enqueueSnackbar(tError('unknownError'),{ variant:'error' })
             }
         }
     }
@@ -62,7 +61,7 @@ const PasswordForm = (props) => {
                 password: '',
                 confirmPassword: '',
             }}
-            render={({ handleSubmit, form, pristine, submitting, values }) => (
+            render={({ handleSubmit, form, pristine, submitting }) => (
                 <form onSubmit={handleSubmit}>
                     <div>
                         <Grid container className={classes.detailMain} spacing={1}>
@@ -72,7 +71,7 @@ const PasswordForm = (props) => {
                                     label={t('field.oldPassword')}
                                     component={JTextField}
                                     fullWidth
-                                    type='password'
+                                    type="password"
                                     required
                                 />
                             </Grid>
@@ -83,7 +82,7 @@ const PasswordForm = (props) => {
                                     component={JTextField}
                                     fullWidth
                                     required
-                                    type='password'
+                                    type="password"
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -93,7 +92,7 @@ const PasswordForm = (props) => {
                                     component={JTextField}
                                     fullWidth
                                     required
-                                    type='password'
+                                    type="password"
                                 />
                             </Grid>
                         </Grid>
@@ -103,7 +102,7 @@ const PasswordForm = (props) => {
                             {t('button.reset')}
                         </Button>
                         <Button type="submit" color="primary" disabled={submitting || pristine}
-                                variant="contained">
+                            variant="contained">
                             {t('button.update')}
                         </Button>
                     </div>
@@ -112,4 +111,4 @@ const PasswordForm = (props) => {
     )
 }
 
-export default withStyles(styles)(PasswordForm)
+export default PasswordForm

@@ -1,5 +1,6 @@
+import { makeStyles } from '@material-ui/core/styles'
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
         minHeight: '100vh',
@@ -19,6 +20,6 @@ const styles = theme => ({
             marginLeft: theme.drawerWidth,
         },
     },
-})
+}))
 
-export default styles
+export default useStyles

@@ -1,6 +1,7 @@
 import grey from '@material-ui/core/colors/grey'
+import { makeStyles } from '@material-ui/core'
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
     formControlMargin : {
         marginTop : theme.spacing(1),
     },
@@ -23,15 +24,8 @@ const styles = theme => ({
     formHelperDisabled: {
         marginTop : 0,
         marginBottom : 0,
-    }
-})
-
-/*
-inputUnderline : {
-        borderBottomStyle : 'solid',
-        borderBottomWidth : 1,
-        borderBottomColor: grey[500],
     },
- */
+})
+)
 
-export default styles
+export default useStyles

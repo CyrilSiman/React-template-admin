@@ -1,30 +1,30 @@
 import React, { Fragment } from 'react'
-import { useApolloClient, useQuery } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/client'
 import { useHistory } from 'react-router-dom'
 import useTheme from '@material-ui/core/styles/useTheme'
 
 import PropTypes from 'prop-types'
-import { withStyles } from '@material-ui/core/styles'
 
 import Hidden from '@material-ui/core/Hidden'
 import Navigator from './components/Navigator'
 
-import { localState } from 'ROOT/services/graphql/localState.graphql'
+import { GetShowLeftMenu } from 'ROOT/services/graphql/localState.graphql'
 
-import styles from './styles'
+import useStyles from './styles'
+import { showLeftMenuVar } from 'ROOT/services/AppApolloClient'
 
 const LeftSideMenu = (props) => {
 
-    const client = useApolloClient()
-    let history = useHistory()
-    let theme = useTheme()
+    const history = useHistory()
+    const theme = useTheme()
 
-    const { loading, data } = useQuery(localState)
+    const { loading, data } = useQuery(GetShowLeftMenu)
 
-    const { classes, navigation } = props
+    const { navigation } = props
+    const classes = useStyles()
 
     const toggleLeftMenu = () => {
-        client.writeData({ data: { showLeftMenu: false } })
+        showLeftMenuVar(false)
     }
 
     const navigateToLink = (path) => {
@@ -39,7 +39,7 @@ const LeftSideMenu = (props) => {
                     <Hidden smUp implementation="css">
                         <Navigator
                             PaperProps={{ style: { width: theme.drawerWidth } }}
-                            variant='temporary'
+                            variant="temporary"
                             ModalProps={{
                                 keepMounted: true, // Better open performance on mobile.
                             }}
@@ -68,7 +68,8 @@ const LeftSideMenu = (props) => {
 }
 
 LeftSideMenu.propTypes = {
-    navigation: PropTypes.array.isRequired
+    navigation: PropTypes.array.isRequired,
+    children : PropTypes.any,
 }
 
-export default withStyles(styles, { withTheme: true })(LeftSideMenu)
+export default LeftSideMenu

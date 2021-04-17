@@ -8,7 +8,7 @@
 export const hasError = (error,code) => {
     let result = false
     if(error) {
-        const {graphQLErrors} = error
+        const { graphQLErrors } = error
         if (graphQLErrors) {
             result = !!graphQLErrors.find((value) => {
                 const extensions = value.extensions

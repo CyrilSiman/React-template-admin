@@ -1,10 +1,10 @@
-import {InMemoryCache} from 'apollo-cache-inmemory'
 import constants from 'ROOT/services/constants'
-import { HttpLink } from 'apollo-link-http'
-import {onError} from 'apollo-link-error'
-import ApolloClient from 'apollo-client'
+import { ApolloClient, HttpLink, InMemoryCache, makeVar } from '@apollo/client'
+import { onError } from "@apollo/client/link/error"
 
-const authenticatedError = onError(  ({ response, graphQLErrors, networkError, operation, forward }) => {
+export const showLeftMenuVar =  makeVar(false)
+
+const authenticatedError = onError(  ({ graphQLErrors, networkError }) => {
 
     if (graphQLErrors && graphQLErrors[0]) {
 
@@ -27,14 +27,19 @@ const httpLink = new HttpLink({
 })
 
 const cache = new InMemoryCache({
-    dataIdFromObject: object => object._id || null
+    dataIdFromObject: object => object._id || null,
+    typePolicies: { // Type policy map
+        Query: {
+            fields: {
+                showLeftMenu: {
+                    read () {
+                        return showLeftMenuVar()
+                    },
+                },
+            },
+        },
+    },
 })
-
-const data = {
-    showLeftMenu: false,
-}
-
-cache.writeData({data})
 
 
 const client = new ApolloClient({
@@ -43,8 +48,5 @@ const client = new ApolloClient({
     link: authenticatedError.concat(httpLink),
 })
 
-client.onResetStore(() => {
-    cache.writeData({ data })
-})
 
 export default client

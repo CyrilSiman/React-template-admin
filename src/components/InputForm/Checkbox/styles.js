@@ -1,8 +1,9 @@
+import { makeStyles } from '@material-ui/core'
 
-const styles = theme => ({
+const useStyles = makeStyles(() => ({
     checkboxControlLabel : {
         marginLeft:0,
-    }
+    },
 })
-
-export default styles
+)
+export default useStyles

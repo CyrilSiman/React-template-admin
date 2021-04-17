@@ -1,5 +1,6 @@
+import { makeStyles } from '@material-ui/core'
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
     main: {
         width: 'auto',
         display: 'block', // Fix IE 11 issue.
@@ -21,14 +22,15 @@ const styles = theme => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        marginBottom: theme.spacing(2)
+        marginBottom: theme.spacing(2),
     },
     wrapperPage : {
         margin: '7.5% auto',
         maxWidth: '460px',
         position: 'relative',
-    }
+    },
 })
+)
 
 
-export default styles
+export default useStyles

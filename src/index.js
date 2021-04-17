@@ -1,35 +1,35 @@
-import React, {Suspense} from 'react'
+import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
 
 import AppApolloClient from 'ROOT/services/AppApolloClient'
 import CssBaseline from '@material-ui/core/CssBaseline'
-import {MuiThemeProvider} from '@material-ui/core'
-import {defaultTheme} from 'ROOT/themes/themes'
-import {MuiPickersUtilsProvider} from '@material-ui/pickers'
+import { MuiThemeProvider } from '@material-ui/core'
+import { defaultTheme } from 'ROOT/themes/themes'
+import { MuiPickersUtilsProvider } from '@material-ui/pickers'
 import frLocale from 'date-fns/locale/fr'
 import DateFnsUtils from '@date-io/date-fns'
-import {SnackbarProvider} from 'notistack'
+import { SnackbarProvider } from 'notistack'
 
 import './themes/agridStyle.scss'
 
 import './configI18n'
 
-import { ApolloProvider } from '@apollo/react-hooks'
+import { ApolloProvider } from '@apollo/client'
 
 ReactDOM.render(
     <Suspense fallback="loading">
         <ApolloProvider client={AppApolloClient}>
             <MuiThemeProvider theme={defaultTheme}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale}>
-                    <CssBaseline/>
+                    <CssBaseline />
                     <SnackbarProvider dense maxSnack={3} autoHideDuration={3000}
-                                      anchorOrigin={{
-                                          vertical: 'bottom',
-                                          horizontal: 'right',
-                                      }}>
-                            <App/>
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'right',
+                        }}>
+                        <App />
                     </SnackbarProvider>
                 </MuiPickersUtilsProvider>
             </MuiThemeProvider>

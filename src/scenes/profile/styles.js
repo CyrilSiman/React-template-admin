@@ -1,12 +1,13 @@
 import { grey } from '@material-ui/core/colors'
+import { makeStyles } from '@material-ui/core'
 
-const styles = (theme) => ({
+const useStyles = makeStyles((theme) => ({
     divider : {
         marginTop:theme.spacing(2),
         marginBottom:theme.spacing(2),
         marginLeft : theme.spacing(1),
         marginRight : theme.spacing(1),
-        backgroundColor:grey.brighter
+        backgroundColor:grey.brighter,
     },
     root: {
         flexGrow: 1,
@@ -28,14 +29,14 @@ const styles = (theme) => ({
         paddingLeft:theme.spacing(1),
     },
     tabWrapper : {
-        alignItems:'flex-end'
+        alignItems:'flex-end',
     },
     closeButton: {
         position: 'absolute',
         right: theme.spacing(1),
         top: theme.spacing(1),
         color: theme.palette.grey[500],
-    }
+    },
 })
-
-export default styles
+)
+export default useStyles

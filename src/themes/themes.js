@@ -1,6 +1,6 @@
-import {createMuiTheme} from '@material-ui/core'
+import { createMuiTheme } from '@material-ui/core'
 
-let theme = createMuiTheme({
+const theme = createMuiTheme({
     typography: {
         fontSize:13,
         useNextVariants: true,
@@ -35,7 +35,7 @@ export const defaultTheme = {
         MuiDrawer: {
             paper: {
                 backgroundColor: '#1769aa',
-                backgroundImage: 'linear-gradient(270deg,rgba(51,148,225,.5),transparent)'
+                backgroundImage: 'linear-gradient(270deg,rgba(51,148,225,.5),transparent)',
             },
         },
         MuiButton: {
@@ -109,7 +109,7 @@ export const defaultTheme = {
             colorPrimary: {
                 color:'#2196f3',
                 backgroundColor: '#ffffff',
-            }
+            },
         },
         MuiBreadcrumbs: {
             root: {
@@ -117,8 +117,8 @@ export const defaultTheme = {
             },
             li: {
                 fontSize:12,
-            }
-        }
+            },
+        },
     },
     props: {
         MuiTab: {

@@ -1,11 +1,12 @@
-import React, {Fragment} from 'react'
+import PropTypes from 'prop-types'
+import React, { Fragment } from 'react'
 
 const BoldStringPart = (props) => {
 
-    const {src,find} = props
+    const { src,find } = props
 
-    let re = new RegExp(`(${find})`, 'gi')
-    let value = src.split(re)
+    const re = new RegExp(`(${find})`, 'gi')
+    const value = src.split(re)
 
     return (
         <Fragment>
@@ -25,3 +26,8 @@ const BoldStringPart = (props) => {
 }
 
 export default BoldStringPart
+
+BoldStringPart.propTypes = {
+    find: PropTypes.string.isRequired,
+    src: PropTypes.string.isRequired,
+}

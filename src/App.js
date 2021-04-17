@@ -8,21 +8,38 @@ import AppInitScene from 'ROOT/scenes/AppInit'
 import LoginScene from 'ROOT/scenes/Auth/scenes/Login'
 import LostPasswordScene from 'ROOT/scenes/Auth/scenes/LostPassword'
 import ResetPasswordScene from 'ROOT/scenes/Auth/scenes/ResetPassword'
-import { useQuery } from '@apollo/react-hooks'
-import {appConfiguredQuery} from 'ROOT/services/graphql/appConfig.graphql'
+import { useQuery } from '@apollo/client'
+import { appConfiguredQuery } from 'ROOT/services/graphql/appConfig.graphql'
 
 import constants from 'ROOT/services/constants'
+import PropTypes from 'prop-types'
+
+function NoMatch ({ ...rest }) {
+    return (
+        <Route
+            {...rest}
+            render={params =>
+                localStorage.getItem(constants.IS_AUTHENTICATED) ? (
+                    <Redirect to={{ pathname: routes.PRIVATE_DASHBOARD, state: { from: params.location } }} />
+                ) : (
+                    <Redirect to={{ pathname: routes.LOGIN, state: { from: params.location } }} />
+                )
+            }
+        />
+    )
+}
+
 
 function App () {
 
-    const {data,loading} = useQuery(appConfiguredQuery)
+    const { data,loading } = useQuery(appConfiguredQuery)
 
     if(loading) {
         return <div>&nbsp;</div>
     }
 
     if(!loading && data && !data.appConfigured) {
-        return <Router><AppInitScene/></Router>
+        return <Router><AppInitScene /></Router>
     }
 
     return (
@@ -38,34 +55,24 @@ function App () {
     )
 }
 
-function NoMatch ({ ...rest }) {
+
+const PrivateRoute = ({ component: Component, ...rest }) => {
     return (
         <Route
             {...rest}
-            render={props =>
-                !!localStorage.getItem(constants.IS_AUTHENTICATED) ? (
-                    <Redirect to={{ pathname: routes.PRIVATE_DASHBOARD, state: { from: props.location } }} />
+            render={params =>
+                localStorage.getItem(constants.IS_AUTHENTICATED) ? (
+                    <Component {...params} />
                 ) : (
-                    <Redirect to={{ pathname: routes.LOGIN, state: { from: props.location } }} />
+                    <Redirect to={{ pathname: routes.LOGIN, state: { from: params.location } }} />
                 )
             }
         />
     )
 }
 
-function PrivateRoute ({ component: Component, ...rest }) {
-    return (
-        <Route
-            {...rest}
-            render={props =>
-                !!localStorage.getItem(constants.IS_AUTHENTICATED) ? (
-                    <Component {...props} />
-                ) : (
-                    <Redirect to={{ pathname: routes.LOGIN, state: { from: props.location } }} />
-                )
-            }
-        />
-    )
+PrivateRoute.propTypes = {
+    component:PropTypes.any.isRequired,
 }
 
 export default App

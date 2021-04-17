@@ -1,12 +1,13 @@
-import React, {Component} from 'react'
-import {Typography} from '@material-ui/core'
+import React, { Component } from 'react'
+import { Typography } from '@material-ui/core'
+import PropTypes from 'prop-types'
 
-export default class SliderFloatingFilter extends Component {
+class SliderFloatingFilter extends Component {
     constructor(props) {
 
         super(props)
         this.state = {
-            currentValue: ''
+            currentValue: '',
         }
     }
 
@@ -14,18 +15,18 @@ export default class SliderFloatingFilter extends Component {
         // note that the filter could be anything here, but our purposes we're assuming a greater than filter only,
         // so just read off the value and use that
         this.setState({
-            currentValue: !parentModel ? '' : parentModel.value
+            currentValue: !parentModel ? '' : parentModel.value,
         })
     }
 
     render() {
         return (
-            <div style={{display: 'flex', alignItems: 'center', height: '100%'}}>
+            <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
                 <Typography variant={'caption'} style={{
                     textOverflow: 'ellipsis',
                     overflow: 'hidden',
                     display: 'inline-block',
-                    width: `${this.props.column.actualWidth - 20 - 21}px`
+                    width: `${this.props.column.actualWidth - 20 - 21}px`,
                 }}>
                     {this.state.currentValue}
                 </Typography>
@@ -33,3 +34,10 @@ export default class SliderFloatingFilter extends Component {
         )
     }
 }
+
+SliderFloatingFilter.propTypes = {
+    column:PropTypes.object.isRequired,
+}
+
+
+export default SliderFloatingFilter

@@ -1,4 +1,4 @@
 
-query localState @client {
+query GetShowLeftMenu {
     showLeftMenu @client
 }

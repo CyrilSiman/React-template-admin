@@ -1,4 +1,6 @@
-const styles = theme => ({
+import { makeStyles } from '@material-ui/core'
+
+const useStyles = makeStyles(theme => ({
     detailMain: {
         paddingTop: theme.spacing(1),
         paddingLeft: theme.spacing(2),
@@ -13,8 +15,8 @@ const styles = theme => ({
         justifyContent: 'flex-end',
         '& > :not(:first-child)' : {
             marginLeft: '8px',
-        }
-    }
+        },
+    },
 })
-
-export default styles
+)
+export default useStyles

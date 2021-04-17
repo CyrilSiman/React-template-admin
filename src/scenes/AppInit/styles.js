@@ -1,8 +1,9 @@
+import { makeStyles } from '@material-ui/core'
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
     submit: {
         marginTop: theme.spacing(3),
-        marginBottom: theme.spacing(3)
+        marginBottom: theme.spacing(3),
     },
     leftIcon: {
         marginRight: theme.spacing(1),
@@ -12,12 +13,12 @@ const styles = theme => ({
         marginTop: theme.spacing(1),
     },
     lostPassword: {
-        color : theme.palette.grey['600']
+        color : theme.palette.grey['600'],
     },
     alert : {
         marginBottom: theme.spacing(2),
         marginTop: theme.spacing(2),
-    }
+    },
 })
-
-export default styles
+)
+export default useStyles

@@ -1,7 +1,7 @@
+import PropTypes from 'prop-types'
 import React from 'react'
-import { withStyles } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/client'
 
 import Dialog from '@material-ui/core/Dialog'
 import Tabs from '@material-ui/core/Tabs'
@@ -15,9 +15,9 @@ import Typography from '@material-ui/core/Typography'
 import InformationForm from 'ROOT/scenes/profile/components/InformationForm'
 import PasswordForm from 'ROOT/scenes/profile/components/PasswordForm'
 
-import {meQuery} from 'ROOT/services/graphql/auth.graphql'
+import { meQuery } from 'ROOT/services/graphql/auth.graphql'
 
-import styles from './styles'
+import useStyles from './styles'
 
 function tabProps(index) {
     return {
@@ -28,9 +28,12 @@ function tabProps(index) {
 
 const ProfileDialog = (props) => {
 
-    const {classes, onClose} = props
-    const {t} = useTranslation('profile')
-    const {data:dataMe, loading:loadingMe} = useQuery(meQuery)
+    const { onClose } = props
+
+    const classes = useStyles()
+
+    const { t } = useTranslation('profile')
+    const { data:dataMe, loading:loadingMe } = useQuery(meQuery)
     const [value, setValue] = React.useState(0)
 
     if(loadingMe) {
@@ -44,8 +47,8 @@ const ProfileDialog = (props) => {
     return (
         <Dialog
             open={true}
-            onClose={props.onClose}
-            scroll='paper'
+            onClose={onClose}
+            scroll="paper"
             aria-labelledby={t('dialogTitle')}
             fullWidth={true}
             maxWidth={'sm'}
@@ -67,12 +70,12 @@ const ProfileDialog = (props) => {
                         aria-label="Vertical tabs example"
                         className={classes.tabs}
                     >
-                        <Tab label="Informations" {...tabProps(0)} classes={{root:classes.tab, wrapper:classes.tabWrapper}}/>
-                        <Tab label="Password" {...tabProps(1)} classes={{root:classes.tab, wrapper:classes.tabWrapper}}/>
+                        <Tab label="Informations" {...tabProps(0)} classes={{ root:classes.tab, wrapper:classes.tabWrapper }} />
+                        <Tab label="Password" {...tabProps(1)} classes={{ root:classes.tab, wrapper:classes.tabWrapper }} />
                     </Tabs>
                     <div className={classes.tabPanelContainer}>
-                        {value === 0 && <InformationForm me={dataMe.me} role="tabpanel" id='vertical-tabpanel-0' />}
-                        {value === 1 && <PasswordForm role="tabpanel" id='vertical-tabpanel-1' />}
+                        {value === 0 && <InformationForm me={dataMe.me} role="tabpanel" id="vertical-tabpanel-0" />}
+                        {value === 1 && <PasswordForm role="tabpanel" id="vertical-tabpanel-1" />}
                     </div>
                 </div>
             </DialogContent>
@@ -80,4 +83,8 @@ const ProfileDialog = (props) => {
     )
 }
 
-export default withStyles(styles)(ProfileDialog)
+export default ProfileDialog
+
+ProfileDialog.propTypes = {
+    onClose: PropTypes.func.isRequired,
+}

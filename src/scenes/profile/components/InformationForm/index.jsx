@@ -1,6 +1,6 @@
+import PropTypes from 'prop-types'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { withStyles } from '@material-ui/core'
 
 import { Field, Form } from 'react-final-form'
 
@@ -11,30 +11,33 @@ import Button from '@material-ui/core/Button'
 
 import JTextField from 'ROOT/components/InputForm/TextField'
 
-import styles from './styles'
-import { useMutation } from '@apollo/react-hooks'
-import {updateMyProfile} from 'ROOT/services/graphql/users.graphql'
+import useStyles from './styles'
+import { useMutation } from '@apollo/client'
+import { updateMyProfile } from 'ROOT/services/graphql/users.graphql'
 import { useSnackbar } from 'notistack'
 
 const InformationForm = (props) => {
 
-    const { classes, me} = props
+    const { me } = props
+
+    const classes = useStyles()
+
     const { enqueueSnackbar } = useSnackbar()
-    const {t} = useTranslation('profile')
-    const {t:tError} = useTranslation('errors')
+    const { t } = useTranslation('profile')
+    const { t:tError } = useTranslation('errors')
 
     const [updateMyProfileMutation] = useMutation(updateMyProfile,{
         onError:() => {
-            enqueueSnackbar(tError('unknownError'),{variant:'error'})
-        }
+            enqueueSnackbar(tError('unknownError'),{ variant:'error' })
+        },
     })
 
     const submitForm = (values) => {
-        updateMyProfileMutation({variables:{
-                email:values.email,
-                lastName:values.lastName,
-                firstName:values.firstName
-            }})
+        updateMyProfileMutation({ variables:{
+            email:values.email,
+            lastName:values.lastName,
+            firstName:values.firstName,
+        } })
     }
 
     return (
@@ -53,7 +56,7 @@ const InformationForm = (props) => {
                 firstName: me.firstName,
                 email: me.email,
             }}
-            render={({ handleSubmit, form, pristine, submitting, values }) => (
+            render={({ handleSubmit, form, pristine, submitting }) => (
                 <form onSubmit={handleSubmit}>
                     <div>
                         <Grid container className={classes.detailMain} spacing={1}>
@@ -91,7 +94,7 @@ const InformationForm = (props) => {
                             {t('button.reset')}
                         </Button>
                         <Button type="submit" color="primary" disabled={submitting || pristine}
-                                variant="contained">
+                            variant="contained">
                             {t('button.update')}
                         </Button>
                     </div>
@@ -100,4 +103,8 @@ const InformationForm = (props) => {
     )
 }
 
-export default withStyles(styles)(InformationForm)
+export default InformationForm
+
+InformationForm.propTypes = {
+    me: PropTypes.object.isRequired,
+}
